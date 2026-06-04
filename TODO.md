@@ -1,0 +1,1 @@
+- [x] Make base names all english

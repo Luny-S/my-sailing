@@ -7,10 +7,10 @@ Based on PZZ (Polski Związek Żeglarski) forms and practical sailing use.
 
 | Folder | Document | Zones |
 |--------|----------|-------|
-| `karta-rejsu/` | Karta rejsu (PZZ sailing card) | Baltic, Mediterranean, Inland |
-| `opinia-z-rejsu/` | Opinia z rejsu (PZZ post-trip assessment) | universal |
+| `passage-card/` | Karta rejsu (PZZ sailing card) | Baltic, Mediterranean, Inland |
+| `crew-opinion/` | Opinia z rejsu (PZZ post-trip assessment) | universal |
 | `safety-briefing/` | Safety briefing / Odprawa bezpieczenstwa | Baltic, Mediterranean, Inland |
-| `dziennik-jachtu/` | Dziennik jachtu / Yacht log | universal |
+| `yacht-log/` | Dziennik jachtu / Yacht log | universal |
 | `yacht-check-in/` | Przyjecie / zdanie jachtu (check-in/out form) | universal |
 | `shopping-list/` | Lista zakupow / Shopping list | Baltic, Mediterranean, Inland |
 | `packing-list/` | Lista pakownia / Packing list | Baltic, Mediterranean, Inland |
@@ -53,7 +53,7 @@ PDFs are written to `build/<document-folder>/`.
 
 ```bash
 cd documents/safety-briefing
-pdflatex safety_briefing_baltyk.tex
+pdflatex safety_briefing_baltic.tex
 ```
 
 ---
@@ -76,9 +76,9 @@ docker run --rm -v "$(pwd)/build:/app/build" my-sailing
 
 ## Pre-filling forms (karta rejsu)
 
-`karta-rejsu` is a fillable PDF form (real AcroForm fields). You can pre-fill it
+`passage-card` is a fillable PDF form (real AcroForm fields). You can pre-fill it
 from a JSON file and get a flattened, ready-to-print PDF. The JSON is validated
-against a [pydantic model](src/my_sailing/models/karta_rejsu.py); an internal
+against a [pydantic model](src/my_sailing/models/passage_card.py); an internal
 adapter maps it to the PDF's field names. Polish diacritics are rendered with
 Latin Modern (the document's own typeface).
 
@@ -90,18 +90,18 @@ uv run build-docs
 uv run fill-doc --list
 
 # Fill from JSON and flatten (default)
-uv run fill-doc karta-rejsu examples/karta_rejsu.json -o tmp/karta.pdf
+uv run fill-doc passage-card examples/passage_card.json -o tmp/karta.pdf
 
 # Keep it interactive instead of flattening
-uv run fill-doc karta-rejsu examples/karta_rejsu.json -o tmp/karta.pdf --keep-editable
+uv run fill-doc passage-card examples/passage_card.json -o tmp/karta.pdf --keep-editable
 
 # Inspect the input shape / underlying field names
-uv run fill-doc karta-rejsu --schema
-uv run fill-doc karta-rejsu --fields
+uv run fill-doc passage-card --schema
+uv run fill-doc passage-card --fields
 ```
 
 Crew is a list of objects (`Lp.` is auto-numbered); the first six fill the
-left on-page table, the next six the right. See [examples/karta_rejsu.json](examples/karta_rejsu.json).
+left on-page table, the next six the right. See [examples/passage_card.json](examples/passage_card.json).
 
 You can also call it from Python:
 
@@ -110,8 +110,8 @@ import json
 from my_sailing.fill import fill_document
 from my_sailing.models import get_document
 
-spec = get_document("karta-rejsu")
-data = json.loads(open("examples/karta_rejsu.json").read())
+spec = get_document("passage-card")
+data = json.loads(open("examples/passage_card.json").read())
 fill_document(spec, data, "tmp/karta.pdf")            # flatten=True by default
 ```
 
@@ -124,22 +124,22 @@ my-sailing/
 ├── pyproject.toml          # Python project (uv / hatchling)
 ├── Dockerfile              # uv + texlive (+ git)
 ├── examples/
-│   └── karta_rejsu.json    # sample data for the karta rejsu form
+│   └── passage_card.json   # sample data for the passage card form
 ├── src/
 │   └── my_sailing/
 │       ├── build.py        # compile all documents/*.tex -> build/
 │       ├── fill.py         # fill + flatten a form PDF from JSON
 │       └── models/         # pydantic models + document registry
 │           ├── base.py
-│           └── karta_rejsu.py
+│           └── passage_card.py
 └── documents/
     ├── shared/
     │   ├── preamble.tex    # shared LaTeX preamble (\input'd by every doc)
     │   └── assets/         # logos / images (e.g. pzz-logo.png)
-    ├── karta-rejsu/        # fillable PZŻ voyage card (PL + EN)
-    ├── opinia-z-rejsu/
+    ├── passage-card/        # fillable PZŻ voyage card (PL + EN)
+    ├── crew-opinion/
     ├── safety-briefing/
-    ├── dziennik-jachtu/
+    ├── yacht-log/
     ├── yacht-check-in/
     ├── shopping-list/
     └── packing-list/
@@ -162,5 +162,5 @@ my-sailing/
 uv run build-docs
 
 # Or compile a single file directly (run from its folder so \input resolves)
-cd documents/karta-rejsu && latexmk -pdf -cd karta_rejsu.tex
+cd documents/passage-card && latexmk -pdf -cd passage_card.tex
 ```

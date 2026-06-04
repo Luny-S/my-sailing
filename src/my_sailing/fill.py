@@ -177,7 +177,7 @@ def main() -> None:
         description="Fill a sailing form PDF from a JSON data file and flatten it.",
     )
     ap.add_argument("document", nargs="?",
-                    help="which document to fill (e.g. karta-rejsu)")
+                    help="which document to fill (e.g. passage-card)")
     ap.add_argument("data", type=Path, nargs="?",
                     help="JSON file with the document data")
     ap.add_argument("-o", "--output", type=Path, help="output PDF path")

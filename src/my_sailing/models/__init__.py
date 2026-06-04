@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .base import FormDocument
-from .karta_rejsu import CrewMember, KartaRejsu
+from .passage_card import CrewMember, PassageCard
 
 ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = ROOT / "build"
@@ -18,7 +18,7 @@ BUILD_DIR = ROOT / "build"
 __all__ = [
     "FormDocument",
     "CrewMember",
-    "KartaRejsu",
+    "PassageCard",
     "DocumentSpec",
     "DOCUMENTS",
     "get_document",
@@ -40,11 +40,11 @@ class DocumentSpec:
 
 
 DOCUMENTS: dict[str, DocumentSpec] = {
-    "karta-rejsu": DocumentSpec(
-        name="karta-rejsu",
+    "passage-card": DocumentSpec(
+        name="passage-card",
         title="Karta rejsu / Captain's certificate of passage",
-        model=KartaRejsu,
-        template=BUILD_DIR / "documents" / "karta-rejsu" / "karta_rejsu.pdf",
+        model=PassageCard,
+        template=BUILD_DIR / "documents" / "passage-card" / "passage_card.pdf",
     ),
 }
 

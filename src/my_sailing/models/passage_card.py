@@ -1,8 +1,8 @@
-"""Data model for the PZŻ *karta rejsu* (captain's certificate of passage).
+"""Data model for the PZŻ *karta rejsu* / captain's certificate of passage.
 
 The public model is clean and domain-oriented (crew is a list of people).
-:meth:`KartaRejsu.to_form_fields` adapts it to the flat AcroForm field names
-used in ``documents/karta-rejsu/karta_rejsu.tex`` (e.g. ``crewL_1_name``).
+:meth:`PassageCard.to_form_fields` adapts it to the flat AcroForm field names
+used in ``documents/passage-card/passage_card.tex`` (e.g. ``crewL_1_name``).
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ class CrewMember(BaseModel):
     lp: int | str | None = Field(default=None, description="Lp. (auto if omitted)")
 
 
-class KartaRejsu(FormDocument):
+class PassageCard(FormDocument):
     """Karta rejsu / Captain's certificate of passage."""
 
     # --- Captain ---
