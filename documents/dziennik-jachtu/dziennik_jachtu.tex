@@ -1,0 +1,115 @@
+\documentclass[a4paper,11pt]{article}
+\input{../shared/preamble}
+
+\fancyhead[L]{\textbf{DZIENNIK JACHTU} / YACHT LOG}
+\fancyhead[R]{Jacht: \field{4cm}}
+
+\begin{document}
+\selectlanguage{polish}
+
+\begin{center}
+    {\Large\bfseries\color{pzzblue} DZIENNIK JACHTU}\\
+    {\large YACHT LOG / JOURNAL}
+\end{center}
+
+\vspace{0.3cm}
+\noindent\rule{\linewidth}{1pt}
+
+% --- Dane jachtu ---
+\subsection*{Dane jachtu / Vessel particulars}
+\begin{tabularx}{\linewidth}{|l|X|l|X|}
+\hline
+Nazwa jachtu / Name & \field{5cm} & Nr rejestracyjny & \field{4cm} \\[6pt]
+\hline
+Typ / Type & \field{4cm} & Bandera / Flag & \field{4cm} \\[6pt]
+\hline
+Armator / Owner & \multicolumn{3}{X|}{\field{10cm}} \\[6pt]
+\hline
+Kapitan / Skipper & \field{5cm} & Nr patentu & \field{4cm} \\[6pt]
+\hline
+Port macierzysty / Home port & \field{5cm} & Rok budowy & \field{3cm} \\[6pt]
+\hline
+\end{tabularx}
+
+\vspace{0.5cm}
+
+% --- Wpisy wachtowe ---
+\subsection*{Wpisy wachtowe / Watch entries}
+
+\noindent\textit{Wzór wpisu — wypełniać co wachtę lub przy każdej istotnej zmianie.}
+
+\vspace{0.3cm}
+
+\begin{longtable}{|p{1.6cm}|p{1.6cm}|p{2cm}|p{2.5cm}|p{1.6cm}|p{1.4cm}|p{1.5cm}|p{2cm}|}
+\hline
+\textbf{Data} & \textbf{Godz.\ (UTC)} & \textbf{Pozycja} & \textbf{Kurs / Course} & \textbf{Prędkość [kn]} & \textbf{Wiatr kier./si.} & \textbf{Stan morza} & \textbf{Uwagi / Remarks} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Data} & \textbf{Godz.} & \textbf{Pozycja} & \textbf{Kurs} & \textbf{Prędkość} & \textbf{Wiatr} & \textbf{Morze} & \textbf{Uwagi} \\
+\hline
+\endhead
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+ & & & & & & & \\[8pt]\hline
+\end{longtable}
+
+\vspace{0.4cm}
+
+% --- Zużycie paliwa ---
+\subsection*{Zużycie paliwa / Fuel log}
+\begin{tabularx}{\linewidth}{|l|X|l|X|l|X|}
+\hline
+\textbf{Data} & \textbf{Port tankowania} & \textbf{Litry} & \textbf{Godziny silnika} & \textbf{Koszt} & \textbf{Uwagi} \\
+\hline
+ & & & & & \\[5pt]\hline
+ & & & & & \\[5pt]\hline
+ & & & & & \\[5pt]\hline
+ & & & & & \\[5pt]\hline
+\end{tabularx}
+
+\vspace{0.4cm}
+
+% --- Zdarzenia / incydenty ---
+\subsection*{Zdarzenia i incydenty / Events \& incidents}
+\begin{tabularx}{\linewidth}{|l|X|}
+\hline
+\textbf{Data/Godz.} & \textbf{Opis zdarzenia} \\
+\hline
+ & \\[1.5cm]\hline
+ & \\[1.5cm]\hline
+ & \\[1.5cm]\hline
+\end{tabularx}
+
+\vspace{0.4cm}
+
+% --- Podsumowanie rejsu ---
+\subsection*{Podsumowanie rejsu / Passage summary}
+\begin{tabularx}{\linewidth}{|l|X|l|X|}
+\hline
+Łączna odległość [Mm] & \field{3cm} & Godziny pod żaglami & \field{3cm} \\[6pt]
+\hline
+Godziny silnika & \field{3cm} & Liczba portów / przystanków & \field{3cm} \\[6pt]
+\hline
+Portfele i koszty paliwa & \field{3cm} & Maks.\ siła wiatru (B) & \field{3cm} \\[6pt]
+\hline
+\end{tabularx}
+
+\end{document}

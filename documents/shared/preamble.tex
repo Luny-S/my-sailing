@@ -1,0 +1,28 @@
+% Shared preamble — \input{../shared/preamble} in every document
+% Each document must declare \documentclass[a4paper,11pt]{article} before \input-ing this file.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish,english]{babel}
+\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{lastpage}
+
+\definecolor{pzzblue}{RGB}{0,70,127}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+
+% Helper: underlined fill-in field of given width
+\newcommand{\field}[1]{\underline{\hspace{#1}}}
+\newcommand{\fieldline}{\noindent\rule{\linewidth}{0.4pt}}

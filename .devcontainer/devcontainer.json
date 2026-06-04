@@ -1,0 +1,25 @@
+{
+  "name": "my-sailing",
+  "build": {
+    "context": "..",
+    "dockerfile": "../Dockerfile"
+  },
+  "overrideCommand": true,
+  "mounts": [
+    "source=my-sailing-uv-cache,target=/root/.cache/uv,type=volume",
+    "source=my-sailing-claude-cache,target=/root/.claude,type=volume"
+  ],
+  "postCreateCommand": "uv sync",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "james-yu.latex-workshop"
+      ],
+      "settings": {
+        "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build/%RELATIVE_DIR%",
+        "latex-workshop.latex.autoBuild.run": "onSave",
+        "latex-workshop.view.pdf.viewer": "tab"
+      }
+    }
+  }
+}
