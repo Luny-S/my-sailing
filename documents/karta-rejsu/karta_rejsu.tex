@@ -33,6 +33,12 @@
 \newcommand{\CFld}[2]{%
   \TextField[name=#1,width=#2,height=12pt,charsize=9pt,
     borderwidth=0,bordercolor={},backgroundcolor={},color={0 0 0}]{}}
+% Borderless field that auto-fills the current (p-based) cell width: \XFld{name}
+\newcommand{\XFld}[1]{%
+  \TextField[name=#1,width=\dimexpr\linewidth-2\tabcolsep\relax,height=12pt,charsize=9pt,
+    borderwidth=0,bordercolor={},backgroundcolor={},color={0 0 0}]{}}
+% Weighted X column for tabularx (factors across a row must sum to #columns)
+\newcolumntype{Y}[1]{>{\hsize=#1\hsize\centering\arraybackslash}X}
 % Multiline field (framed light box): \MFld{name}{width}{height}
 \newcommand{\MFld}[3]{%
   \TextField[name=#1,width=#2,height=#3,charsize=9pt,multiline=true,
@@ -102,15 +108,15 @@
       & \lblTidal~\textbf{\lblYesNo} \\
     \hline
     \multicolumn{3}{|l|}{\lblVisitedPorts}\\[-2pt]
-    \multicolumn{3}{|l|}{\MFld{visited_ports}{17.0cm}{44pt}}\\
+    \multicolumn{3}{|l|}{\MFld{visited_ports}{17.6cm}{44pt}}\\
     \hline
     \lblTidalCount~\CFld{tidal_count}{2.0cm} & \multicolumn{2}{l|}{\lblCruiseDays~\CFld{cruise_days}{2.0cm}}\\
     \hline
   \end{tabularx}
 
-  % ---------------- Hours table ----------------
+  % ---------------- Hours table (full width, weighted columns) ----------------
   \vspace{4pt}
-  \noindent\begin{tabular}{|>{\centering\arraybackslash}m{3.0cm}|>{\centering\arraybackslash}m{2.0cm}|>{\centering\arraybackslash}m{2.0cm}|>{\centering\arraybackslash}m{2.2cm}|>{\centering\arraybackslash}m{3.9cm}|>{\centering\arraybackslash}m{2.4cm}|}
+  \noindent\begin{tabularx}{\linewidth}{|Y{1.16}|Y{0.78}|Y{0.78}|Y{0.85}|Y{1.50}|Y{0.93}|}
     \hline
     \multicolumn{4}{|c|}{\footnotesize\lblHoursUnderway}
       & \multicolumn{1}{c|}{\footnotesize\lblHoursMooring}
@@ -120,10 +126,10 @@
       & {\scriptsize\lblUsingEngine} & {\scriptsize\lblOnTidal}
       & {\scriptsize\lblInHarbours} & \\
     \hline
-    \CFld{h_total}{2.7cm} & \CFld{h_sails}{1.8cm} & \CFld{h_engine}{1.8cm}
-      & \CFld{h_tidal}{2.0cm} & \CFld{h_mooring}{3.6cm} & \CFld{trip_nm}{2.1cm}\\
+    \XFld{h_total} & \XFld{h_sails} & \XFld{h_engine}
+      & \XFld{h_tidal} & \XFld{h_mooring} & \XFld{trip_nm}\\
     \hline
-  \end{tabular}
+  \end{tabularx}
 
   % ---------------- Crew ----------------
   \Sec{\lblCrewSec}
@@ -131,43 +137,48 @@
   \begin{minipage}[t]{0.49\linewidth}\crewtable{L}\end{minipage}\hfill
   \begin{minipage}[t]{0.49\linewidth}\crewtable{R}\end{minipage}
 
+  \vspace{0pt plus 2fill}
+
   % ---------------- Comments ----------------
   \Sec{\lblCaptainComments}
-  \MFld{remarks_captain}{\linewidth}{40pt}\par
-  \vspace{6pt}
+  \MFld{remarks_captain}{\linewidth}{54pt}\par
+  \vspace{10pt}
   \noindent\begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
     \CFld{cap_place_date}{6cm} & \CFld{cap_signature}{6cm}\\[-2pt]
     {\itshape\footnotesize\lblPlaceDate} & {\itshape\footnotesize\lblCaptainSign}\\
   \end{tabularx}
 
+  \vspace{0pt plus 1.5fill}
+
   \Sec{\lblOwnerComments}
-  \MFld{remarks_owner}{\linewidth}{40pt}\par
-  \vspace{6pt}
+  \MFld{remarks_owner}{\linewidth}{54pt}\par
+  \vspace{10pt}
   \noindent\begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
     \CFld{owner_place_date}{6cm} & \CFld{owner_signature}{6cm}\\[-2pt]
     {\itshape\footnotesize\lblPlaceDate} & {\itshape\footnotesize\lblOwnerSign}\\
   \end{tabularx}
 
-  \vspace{4pt}
+  \vspace{0pt plus 2fill}
+
   \rule{6cm}{0.4pt}\par
   {\itshape\footnotesize\lblFootnote}
 }
 
-% Crew sub-table: #1 = L or R (field-name prefix)
+% Crew sub-table: #1 = L or R (field-name prefix). Fills its minipage width.
 \newcommand{\crewtable}[1]{%
-  \setlength{\extrarowheight}{1pt}%
-  \begin{tabular}{|>{\centering\arraybackslash}m{0.6cm}|m{3.6cm}|>{\centering\arraybackslash}m{1.4cm}|>{\centering\arraybackslash}m{1.3cm}|}
+  \setlength{\extrarowheight}{1pt}\setlength{\tabcolsep}{3pt}%
+  \begin{tabularx}{\linewidth}{|>{\centering\arraybackslash}m{0.45cm}|X|>{\centering\arraybackslash}m{1.45cm}|>{\centering\arraybackslash}m{1.35cm}|}
     \hline
     {\itshape\scriptsize\lblLp} & {\itshape\scriptsize\lblCrewName}
       & {\itshape\scriptsize\lblCrewCert} & {\itshape\scriptsize\lblCrewRank}\\
     \hline
-    \CFld{crew#1_1_lp}{0.5cm} & \CFld{crew#1_1_name}{3.5cm} & \CFld{crew#1_1_cert}{1.3cm} & \CFld{crew#1_1_rank}{1.2cm}\\\hline
-    \CFld{crew#1_2_lp}{0.5cm} & \CFld{crew#1_2_name}{3.5cm} & \CFld{crew#1_2_cert}{1.3cm} & \CFld{crew#1_2_rank}{1.2cm}\\\hline
-    \CFld{crew#1_3_lp}{0.5cm} & \CFld{crew#1_3_name}{3.5cm} & \CFld{crew#1_3_cert}{1.3cm} & \CFld{crew#1_3_rank}{1.2cm}\\\hline
-    \CFld{crew#1_4_lp}{0.5cm} & \CFld{crew#1_4_name}{3.5cm} & \CFld{crew#1_4_cert}{1.3cm} & \CFld{crew#1_4_rank}{1.2cm}\\\hline
-    \CFld{crew#1_5_lp}{0.5cm} & \CFld{crew#1_5_name}{3.5cm} & \CFld{crew#1_5_cert}{1.3cm} & \CFld{crew#1_5_rank}{1.2cm}\\\hline
-    \CFld{crew#1_6_lp}{0.5cm} & \CFld{crew#1_6_name}{3.5cm} & \CFld{crew#1_6_cert}{1.3cm} & \CFld{crew#1_6_rank}{1.2cm}\\\hline
-  \end{tabular}}
+    \XFld{crew#1_1_lp} & \XFld{crew#1_1_name} & \XFld{crew#1_1_cert} & \XFld{crew#1_1_rank}\\\hline
+    \XFld{crew#1_2_lp} & \XFld{crew#1_2_name} & \XFld{crew#1_2_cert} & \XFld{crew#1_2_rank}\\\hline
+    \XFld{crew#1_3_lp} & \XFld{crew#1_3_name} & \XFld{crew#1_3_cert} & \XFld{crew#1_3_rank}\\\hline
+    \XFld{crew#1_4_lp} & \XFld{crew#1_4_name} & \XFld{crew#1_4_cert} & \XFld{crew#1_4_rank}\\\hline
+    \XFld{crew#1_5_lp} & \XFld{crew#1_5_name} & \XFld{crew#1_5_cert} & \XFld{crew#1_5_rank}\\\hline
+    \XFld{crew#1_6_lp} & \XFld{crew#1_6_name} & \XFld{crew#1_6_cert} & \XFld{crew#1_6_rank}\\\hline
+  \end{tabularx}}
 
 % ===========================================================================
 \begin{document}
