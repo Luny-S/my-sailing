@@ -1,6 +1,10 @@
 .venv/
 build/
 tmp/
+
+# Local fill data — keep the folder, ignore its contents
+data/*
+!data/.gitkeep
 __pycache__/
 *.pyc
 *.pyo
