@@ -13,9 +13,19 @@
       the drawn font size to the field width (and/or wrap), so nothing clips.
 - [ ] **crew-opinion alignment**: tidy the OPINIA KAPITANA checkbox table
       (trailing column / option spacing) and overall vertical spacing.
-- [ ] **Tech decision**: keep LaTeX + AcroForm, or move to HTML+CSS (WeasyPrint)
-      / Typst for data-driven print PDFs. Hinges on whether *interactive*
-      fillable PDFs are needed, or only print-ready blanks + pre-filled
-      (flattened) PDFs. See chat notes.
+- [x] **Tech decision**: print-only, pre-filled PDFs (no interactive fill
+      needed) → move to **HTML + CSS + WeasyPrint**. Feasibility confirmed:
+      WeasyPrint renders A4 with full Polish diacritics + bordered tables in
+      this container (system libs: libpango/cairo/gdk-pixbuf, fonts-dejavu).
+- [ ] **Rewrite the forms in HTML/CSS + WeasyPrint** (print-only, pre-filled):
+      - Jinja2 templates bind the existing pydantic models directly (no flat
+        AcroForm field-name mapping); render PL + EN pages, loop crew for
+        crew-opinion (one form per member).
+      - CSS solves the LaTeX pain points: field auto-fit/wrapping (no overflow),
+        easier alignment, `@page { size: A4 }` for print.
+      - Add weasyprint + jinja2 deps; a render module + CLI (replace/augment
+        `fill-doc`); reuse documents/shared/assets/pzz-logo.png.
+      - Port passage-card first (spike), then crew-opinion; retire the LaTeX
+        forms once parity is reached.
 - [ ] Make the other skeleton docs (safety-briefing, shopping-list, packing-list,
       yacht-log, yacht-check-in) into real fillable forms + models, if wanted.
