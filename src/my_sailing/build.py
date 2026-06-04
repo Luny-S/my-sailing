@@ -12,7 +12,10 @@ SKIP_DIRS = {"shared"}
 
 def compile_doc(tex_file: Path) -> bool:
     rel = tex_file.relative_to(DOCS_DIR)
-    out_dir = BUILD_DIR / rel.parent
+    # Mirror the source tree under build/ (e.g. build/documents/passage-card/),
+    # matching the LaTeX Workshop IDE output dir and the fill-doc registry.
+    out_rel = tex_file.relative_to(ROOT).parent
+    out_dir = BUILD_DIR / out_rel
     out_dir.mkdir(parents=True, exist_ok=True)
 
     result = subprocess.run(
@@ -23,13 +26,17 @@ def compile_doc(tex_file: Path) -> bool:
             str(tex_file),
         ],
         capture_output=True,
+        # pdflatex logs aren't always valid UTF-8 (font/encoding names);
+        # decode leniently so a stray byte can't crash the build.
         text=True,
+        encoding="utf-8",
+        errors="replace",
         cwd=tex_file.parent,
     )
 
     pdf_name = tex_file.with_suffix(".pdf").name
     if result.returncode == 0:
-        print(f"  OK  {rel} -> build/{rel.parent}/{pdf_name}")
+        print(f"  OK  {rel} -> build/{out_rel}/{pdf_name}")
         return True
 
     print(f"FAIL  {rel}", file=sys.stderr)
