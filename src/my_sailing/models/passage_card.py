@@ -9,19 +9,23 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .base import FormDocument, put
+from .base import Bilingual, FormDocument, put, put_lang
 
 MAX_CREW = 12  # two on-page tables of 6 rows each
 
 
 class CrewMember(BaseModel):
-    """One crew row. The ``Lp.`` ordinal is filled automatically from order."""
+    """One crew row. The ``Lp.`` ordinal is filled automatically from order.
+
+    ``cert`` and ``rank`` are :class:`Bilingual` (their wording differs between
+    the Polish and English pages); a plain string is used for both languages.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
     name: str | None = Field(default=None, description="Imię i nazwisko")
-    cert: str | None = Field(default=None, description="stopień żegl./mot.")
-    rank: str | None = Field(default=None, description="funkcja na jachcie")
+    cert: Bilingual | None = Field(default=None, description="stopień żegl./mot.")
+    rank: Bilingual | None = Field(default=None, description="funkcja na jachcie")
 
 
 class PassageCard(FormDocument):
@@ -29,7 +33,7 @@ class PassageCard(FormDocument):
 
     # --- Captain ---
     captain_name: str | None = None
-    captain_cert: str | None = None          # stop. żegl./mot. i nr pat.
+    captain_cert: Bilingual | None = None    # stop. żegl./mot. i nr pat.
     captain_phone: str | None = None
     captain_email: str | None = None
 
@@ -61,17 +65,17 @@ class PassageCard(FormDocument):
     # --- Crew (list of people; first 6 fill the left table, next 6 the right) ---
     crew: list[CrewMember] = Field(default_factory=list)
 
-    # --- Comments / signatures ---
-    remarks_captain: str | None = None
+    # --- Comments / signatures (remarks wording differs by language) ---
+    remarks_captain: Bilingual | None = None
     captain_place_date: str | None = None
-    remarks_owner: str | None = None
+    remarks_owner: Bilingual | None = None
     owner_place_date: str | None = None
 
-    def to_form_fields(self) -> dict[str, str]:
-        f: dict[str, str] = {}
+    def to_form_fields(self) -> dict[str, object]:
+        f: dict[str, object] = {}
 
         put(f, "cap_name", self.captain_name)
-        put(f, "cap_cert", self.captain_cert)
+        put_lang(f, "cap_cert", self.captain_cert)
         put(f, "cap_phone", self.captain_phone)
         put(f, "cap_email", self.captain_email)
 
@@ -105,12 +109,12 @@ class PassageCard(FormDocument):
             prefix = f"crew{side}_{row}_"
             put(f, prefix + "lp", i + 1)  # Lp. is always the position in order
             put(f, prefix + "name", member.name)
-            put(f, prefix + "cert", member.cert)
-            put(f, prefix + "rank", member.rank)
+            put_lang(f, prefix + "cert", member.cert)
+            put_lang(f, prefix + "rank", member.rank)
 
-        put(f, "remarks_captain", self.remarks_captain)
+        put_lang(f, "remarks_captain", self.remarks_captain)
         put(f, "cap_place_date", self.captain_place_date)
-        put(f, "remarks_owner", self.remarks_owner)
+        put_lang(f, "remarks_owner", self.remarks_owner)
         put(f, "owner_place_date", self.owner_place_date)
 
         return f

@@ -1,121 +1,307 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,10pt]{article}
 \input{../shared/preamble}
 
-\fancyhead[L]{\textbf{OPINIA Z REJSU}}
-\fancyhead[R]{PZŻ}
+% --- Form / appearance packages (must come after the shared preamble) ---
+\usepackage[expansion=false,protrusion=false]{microtype}
+\usepackage{colortbl}
+\usepackage[
+  pdftitle={Opinia z rejsu / Crew member's certificate of passage},
+  pdflang={pl},
+  hidelinks
+]{hyperref}
 
+\geometry{top=1.1cm,bottom=1.1cm,left=1.4cm,right=1.4cm}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\definecolor{pzznavy}{RGB}{25,38,80}
+
+% "_" literal so AcroForm field names keep underscores (cap_name, op_duties_g).
+\catcode`\_=12\relax
+
+% ---------------------------------------------------------------------------
+% Field helpers (identical to passage_card.tex)
+% ---------------------------------------------------------------------------
+\newcommand{\Fld}[2]{%
+  \TextField[name=#1,width=#2,height=11pt,charsize=9pt,
+    borderstyle=U,borderwidth=0.6,bordercolor={0.55 0.55 0.55},
+    backgroundcolor={},color={0 0 0}]{}}
+\newcommand{\CFld}[2]{%
+  \TextField[name=#1,width=#2,height=12pt,charsize=9pt,
+    borderwidth=0,bordercolor={},backgroundcolor={},color={0 0 0}]{}}
+\newcommand{\XFld}[1]{%
+  \TextField[name=#1,width=\dimexpr\linewidth-2\tabcolsep\relax,height=12pt,charsize=9pt,
+    borderwidth=0,bordercolor={},backgroundcolor={},color={0 0 0}]{}}
+\newcolumntype{Y}[1]{>{\hsize=#1\hsize\centering\arraybackslash}X}
+\newcommand{\MFld}[3]{%
+  \TextField[name=#1,width=#2,height=#3,charsize=9pt,multiline=true,
+    borderstyle=U,borderwidth=0.6,bordercolor={0.55 0.55 0.55},
+    backgroundcolor={},color={0 0 0}]{}}
+\newlength{\lftmp}
+\newcommand{\LF}[2]{%
+  \settowidth{\lftmp}{#1\,}%
+  #1\,\TextField[name=#2,width=\dimexpr\linewidth-\lftmp-2pt\relax,height=11pt,
+    charsize=9pt,borderstyle=U,borderwidth=0.6,bordercolor={0.55 0.55 0.55},
+    backgroundcolor={},color={0 0 0}]{}}
+% Checkbox option: \Chk{name}{label} — prints a box (ticked on flatten/check)
+\newcommand{\Chk}[2]{%
+  \CheckBox[name=#1,width=8pt,height=8pt,bordercolor={0 0 0},borderwidth=0.4,
+    backgroundcolor={}]{}\,#2}
+
+\newcommand{\Sec}[1]{\vspace{4pt}{\bfseries #1}\vspace{1pt}\par}
+
+% Header machinery (identical to passage_card.tex)
+\newsavebox{\hdrbox}
+\newsavebox{\logobox}
+\newlength{\hdrh}
+\newlength{\hdrw}
+\newcommand{\titlebox}[1]{%
+  \begin{tabular}{|>{\centering\arraybackslash}m{\dimexpr#1-2\tabcolsep-2\arrayrulewidth\relax}|}
+    \hline
+    \rule[-3pt]{0pt}{15pt}\textbf{\textls[260]{\lblAssoc}}\\
+    \hline
+    \rule[-6pt]{0pt}{26pt}\fontsize{17}{20}\selectfont\bfseries\textls[90]{\lblTitle}\\
+    \hline
+  \end{tabular}}
+
+% ===========================================================================
+% One full page. Most field names are shared across the PL and EN pages, so a
+% value fills both. Fields whose VALUE differs by language (cert, rank, the
+% captain cert, remarks) are suffixed with \Lang -> _pl / _en.
+% ===========================================================================
+\newcommand{\opinionpage}{%
+  % ---------------- Header ----------------
+  \savebox{\hdrbox}{\titlebox{\linewidth}}%
+  \setlength{\hdrh}{\dimexpr\ht\hdrbox+\dp\hdrbox\relax}%
+  \savebox{\logobox}{\includegraphics[height=\hdrh]{../shared/assets/pzz-logo}}%
+  \setlength{\hdrw}{\dimexpr\linewidth-\wd\logobox-4pt\relax}%
+  \savebox{\hdrbox}{\titlebox{\hdrw}}%
+  \noindent\raisebox{-\dp\hdrbox}{\usebox{\logobox}}\hspace{4pt}\usebox{\hdrbox}\par
+  \vspace{3pt}
+
+  % ---------------- Participant ----------------
+  \Sec{\lblParticipantSec}
+  \noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{10pt}}X@{}}
+    \LF{\lblName}{part_name} & \LF{\lblCert}{part_cert_\Lang} \\[3pt]
+  \end{tabularx}
+  \noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{8pt}}X@{\hspace{8pt}}X@{}}
+    \LF{\lblPhone}{part_phone} & \LF{\lblEmail}{part_email} & \LF{\lblRank}{part_rank_\Lang} \\
+  \end{tabularx}
+
+  % ---------------- Yacht ----------------
+  \Sec{\lblYachtSec}
+  \lblRegNo~\Fld{yacht_reg}{2.6cm}\quad\lblYachtName~\Fld{yacht_name}{6.0cm}%
+    \hfill\lblLOA~\Fld{yacht_loa}{2.2cm}~[m]\par
+  \vspace{2pt}
+  \lblHomePort~\Fld{yacht_homeport}{8.4cm}\hfill\lblEnginePower~\Fld{yacht_engine}{2.2cm}~[kW]\par
+
+  % ---------------- Cruise ----------------
+  \Sec{\lblCruiseSec}
+  \noindent\LF{\lblBasedOn}{cruise_logbook}\par
+  \vspace{3pt}
+  \setlength{\extrarowheight}{2pt}
+  \noindent\begin{tabularx}{\linewidth}{|X|p{3.0cm}|p{4.0cm}|}
+    \hline
+    \lblPortEmbark~\CFld{port_embark}{4.0cm} & \lblDate~\CFld{date_embark}{1.6cm}
+      & \lblTidal~\textbf{\lblYesNo} \\
+    \hline
+    \lblPortDisembark~\CFld{port_disembark}{4.0cm} & \lblDate~\CFld{date_disembark}{1.6cm}
+      & \lblTidal~\textbf{\lblYesNo} \\
+    \hline
+    \multicolumn{3}{|l|}{\lblVisitedPorts}\\[-2pt]
+    \multicolumn{3}{|l|}{\MFld{visited_ports}{17.6cm}{40pt}}\\
+    \hline
+    \lblTidalCount~\CFld{tidal_count}{2.0cm} & \multicolumn{2}{l|}{\lblCruiseDays~\CFld{cruise_days}{2.0cm}}\\
+    \hline
+  \end{tabularx}
+
+  % ---------------- Hours table ----------------
+  \vspace{4pt}
+  {\renewcommand{\tabularxcolumn}[1]{m{##1}}%
+  \setlength{\extrarowheight}{2pt}%
+  \noindent\begin{tabularx}{\linewidth}{|Y{1.16}|Y{0.78}|Y{0.78}|Y{0.85}|Y{1.50}|Y{0.93}|}
+    \hline
+    \multicolumn{4}{|c|}{\footnotesize\lblHoursUnderway}
+      & \multicolumn{1}{c|}{\footnotesize\lblHoursMooring}
+      & \multirow{2}{*}{\footnotesize\shortstack{\lblTripA\\\lblTripB\\\lblTripC}}\\
+    \cline{1-5}
+    {\scriptsize\shortstack{\lblTotalA\\\lblTotalB}} & {\scriptsize\lblUnderSails}
+      & {\scriptsize\lblUsingEngine} & {\scriptsize\shortstack{\lblOnTidalA\\\lblOnTidalB}}
+      & {\scriptsize\lblInHarbours} & \\
+    \hline
+    \XFld{h_total} & \XFld{h_sails} & \XFld{h_engine}
+      & \XFld{h_tidal} & \XFld{h_mooring} & \XFld{trip_nm}\\
+    \hline
+  \end{tabularx}}
+
+  % ---------------- Captain's opinion (checkboxes) ----------------
+  \vspace{5pt}
+  \setlength{\extrarowheight}{3pt}
+  \noindent\begin{tabularx}{\linewidth}{|*{12}{Y{1}}|}
+    \hline
+    \multicolumn{4}{|l}{\textbf{\lblOpinionSec}}
+      & \multicolumn{4}{l}{\Chk{op_opinion_pos}{\textbf{\lblOpPos}}}
+      & \multicolumn{4}{l|}{\Chk{op_opinion_neg}{\textbf{\lblOpNeg}}}\\
+    \hline
+    \multicolumn{12}{|l|}{\textbf{\lblDutiesSec}}\\
+    \hline
+    \multicolumn{3}{|l}{\Chk{op_duties_vg}{\lblDutVG}}
+      & \multicolumn{3}{l}{\Chk{op_duties_g}{\lblDutG}}
+      & \multicolumn{3}{l}{\Chk{op_duties_s}{\lblDutS}}
+      & \multicolumn{3}{l|}{\Chk{op_duties_u}{\lblDutU}}\\
+    \hline
+    \multicolumn{12}{|l|}{\textbf{\lblSickSec}}\\
+    \hline
+    \multicolumn{4}{|l}{\Chk{op_sick_no}{\lblSickNo}}
+      & \multicolumn{4}{l}{\Chk{op_sick_heavy}{\lblSickHeavy}}
+      & \multicolumn{4}{l|}{\Chk{op_sick_work}{\lblSickWork}}\\
+    \hline
+    \multicolumn{12}{|l|}{\textbf{\lblEndurSec}}\\
+    \hline
+    \multicolumn{3}{|l}{\Chk{op_endur_g}{\lblEndG}}
+      & \multicolumn{3}{l}{\Chk{op_endur_s}{\lblEndS}}
+      & \multicolumn{3}{l}{\Chk{op_endur_u}{\lblEndU}}
+      & \multicolumn{3}{l|}{\Chk{op_endur_nt}{\lblEndNT}}\\
+    \hline
+  \end{tabularx}
+
+  % ---------------- Captain's comments ----------------
+  \Sec{\lblCommentsSec}
+  \MFld{remarks_captain_\Lang}{\linewidth}{46pt}\par
+
+  \vspace{0pt plus 1fill}
+
+  % ---------------- Captain info + signature ----------------
+  \Sec{\lblCaptainSec}
+  \noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{10pt}}X@{}}
+    \LF{\lblName}{cap_name}  & \LF{\lblCert}{cap_cert_\Lang}  \\[3pt]
+    \LF{\lblPhone}{cap_phone} & \LF{\lblEmail}{cap_email} \\
+  \end{tabularx}
+  \vspace{12pt}
+  \noindent\begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+    \CFld{cap_place_date}{6cm} & \CFld{cap_signature}{6cm}\\[-2pt]
+    {\itshape\footnotesize\lblPlaceDate} & {\itshape\footnotesize\lblCaptainSign}\\
+  \end{tabularx}
+
+  \vspace{4pt}
+  \rule{6cm}{0.4pt}\par
+  {\itshape\footnotesize\lblFootnote}\par
+  {\itshape\footnotesize\lblFootnoteB}
+}
+
+% ===========================================================================
 \begin{document}
+\begin{Form}
+
+% ----------------------- PAGE 1 : POLISH -----------------------
 \selectlanguage{polish}
+\newcommand{\Lang}{pl}
+\newcommand{\lblAssoc}{POLSKI ZWI\k{A}ZEK \.ZEGLARSKI}
+\newcommand{\lblTitle}{OPINIA Z REJSU}
+\newcommand{\lblParticipantSec}{INFORMACJE O UCZESTNIKU REJSU}
+\newcommand{\lblName}{Imi\k{e} i nazwisko:}
+\newcommand{\lblCert}{stop. \.zegl./mot. i nr pat.:}
+\newcommand{\lblPhone}{tel.:}
+\newcommand{\lblEmail}{adres e-mail:}
+\newcommand{\lblRank}{funkcja:}
+\newcommand{\lblYachtSec}{INFORMACJE O JACHCIE}
+\newcommand{\lblRegNo}{Nr rej.:}
+\newcommand{\lblYachtName}{nazwa jachtu:}
+\newcommand{\lblLOA}{Lc=}
+\newcommand{\lblHomePort}{port macierzysty:}
+\newcommand{\lblEnginePower}{moc silnika:}
+\newcommand{\lblCruiseSec}{INFORMACJE O REJSIE}
+\newcommand{\lblBasedOn}{Wpisu dokonano na podstawie dziennika jachtowego*, nr pływania}
+\newcommand{\lblPortEmbark}{Port zaokr\k{e}towania:}
+\newcommand{\lblPortDisembark}{Port wyokr\k{e}towania:}
+\newcommand{\lblDate}{Data:}
+\newcommand{\lblTidal}{P\l ywowy:}
+\newcommand{\lblYesNo}{TAK / NIE}
+\newcommand{\lblVisitedPorts}{Odwiedzone porty:}
+\newcommand{\lblTidalCount}{W tym liczba port\'ow p\l ywowych:}
+\newcommand{\lblCruiseDays}{Liczba dni rejsu:}
+\newcommand{\lblHoursUnderway}{GODZINY \.ZEGLUGI}
+\newcommand{\lblHoursMooring}{GODZINY POSTOJU}
+\newcommand{\lblTripA}{PRZEBYTO}\newcommand{\lblTripB}{MIL}\newcommand{\lblTripC}{MORSKICH}
+\newcommand{\lblTotalA}{razem}\newcommand{\lblTotalB}{(pod \.zaglami i na silniku)}
+\newcommand{\lblUnderSails}{pod \.zaglami}
+\newcommand{\lblUsingEngine}{na silniku}
+\newcommand{\lblOnTidalA}{po wodach}\newcommand{\lblOnTidalB}{p\l ywowych}
+\newcommand{\lblInHarbours}{w portach i na kotwicy}
+\newcommand{\lblOpinionSec}{OPINIA KAPITANA**}
+\newcommand{\lblOpPos}{pozytywna}\newcommand{\lblOpNeg}{negatywna}
+\newcommand{\lblDutiesSec}{Z obowi\k{a}zk\'ow wywi\k{a}zywa\l/a si\k{e}:}
+\newcommand{\lblDutVG}{bardzo dobrze}\newcommand{\lblDutG}{dobrze}
+\newcommand{\lblDutS}{dostatecznie}\newcommand{\lblDutU}{niedostatecznie}
+\newcommand{\lblSickSec}{Chorobie morskiej:}
+\newcommand{\lblSickNo}{nie podlega\l/a}\newcommand{\lblSickHeavy}{chorowa\l/a ci\k{e}\.zko}
+\newcommand{\lblSickWork}{chorowa\l/a lecz m\'og\l/mog\l a pracowa\'c}
+\newcommand{\lblEndurSec}{Odporno\'s\'c w trudnych warunkach:}
+\newcommand{\lblEndG}{dobra}\newcommand{\lblEndS}{dostateczna}
+\newcommand{\lblEndU}{niedostateczna}\newcommand{\lblEndNT}{nie sprawdzano}
+\newcommand{\lblCommentsSec}{UWAGI KAPITANA}
+\newcommand{\lblCaptainSec}{INFORMACJE O KAPITANIE}
+\newcommand{\lblPlaceDate}{miejscowo\'s\'c, data}
+\newcommand{\lblCaptainSign}{podpis kapitana}
+\newcommand{\lblFootnote}{* je\.zeli by\l{} prowadzony}
+\newcommand{\lblFootnoteB}{** wymagana na podstawie \S~4 pkt 3 Rozporz\k{a}dzenia MSiT z dnia 9 kwietnia 2013 r. w sprawie uprawiania turystyki wodnej}
+\opinionpage
 
-\begin{center}
-    {\Large\bfseries\color{pzzblue} OPINIA Z REJSU}\\[4pt]
-    {\large Polski Związek Żeglarski}\\[2pt]
-    {\small (podstawa: Rozporządzenie w sprawie uprawiania turystyki wodnej)}
-\end{center}
+\clearpage
 
-\vspace{0.5cm}
-\noindent\rule{\linewidth}{1pt}
-\vspace{0.3cm}
+% ----------------------- PAGE 2 : ENGLISH -----------------------
+\selectlanguage{english}
+\renewcommand{\Lang}{en}
+\renewcommand{\lblAssoc}{POLISH YACHTING ASSOCIATION}
+\renewcommand{\lblTitle}{CREW MEMBER'S CERTIFICATE OF PASSAGE}
+\renewcommand{\lblParticipantSec}{PERSONAL INFORMATION}
+\renewcommand{\lblName}{Name \& surname:}
+\renewcommand{\lblCert}{cert. of sailing/motor competency, No.:}
+\renewcommand{\lblPhone}{phone:}
+\renewcommand{\lblEmail}{email:}
+\renewcommand{\lblRank}{rank:}
+\renewcommand{\lblYachtSec}{YACHT'S INFORMATION}
+\renewcommand{\lblRegNo}{Reg. No.:}
+\renewcommand{\lblYachtName}{name of yacht:}
+\renewcommand{\lblLOA}{LOA:}
+\renewcommand{\lblHomePort}{home port:}
+\renewcommand{\lblEnginePower}{Engine power:}
+\renewcommand{\lblCruiseSec}{CRUISE INFORMATION}
+\renewcommand{\lblBasedOn}{Based on Vessel Log Book*, voyage No:}
+\renewcommand{\lblPortEmbark}{Port of embarkation:}
+\renewcommand{\lblPortDisembark}{Port of disembarkation:}
+\renewcommand{\lblDate}{Date:}
+\renewcommand{\lblTidal}{Tidal port:}
+\renewcommand{\lblYesNo}{YES / NO}
+\renewcommand{\lblVisitedPorts}{Visited ports:}
+\renewcommand{\lblTidalCount}{Number of tidal ports:}
+\renewcommand{\lblCruiseDays}{Number of cruise days:}
+\renewcommand{\lblHoursUnderway}{NUMBER OF HOURS UNDERWAY}
+\renewcommand{\lblHoursMooring}{NUMBER OF MOORING HOURS}
+\renewcommand{\lblTripA}{}\renewcommand{\lblTripB}{TRIP NM}\renewcommand{\lblTripC}{}
+\renewcommand{\lblTotalA}{total}\renewcommand{\lblTotalB}{(sails \& engine)}
+\renewcommand{\lblUnderSails}{under sails}
+\renewcommand{\lblUsingEngine}{using engine}
+\renewcommand{\lblOnTidalA}{on tidal}\renewcommand{\lblOnTidalB}{waters}
+\renewcommand{\lblInHarbours}{in harbours, on anchor}
+\renewcommand{\lblOpinionSec}{CAPTAIN'S OPINION **}
+\renewcommand{\lblOpPos}{positive}\renewcommand{\lblOpNeg}{negative}
+\renewcommand{\lblDutiesSec}{Duties fulfilment:}
+\renewcommand{\lblDutVG}{very good}\renewcommand{\lblDutG}{good}
+\renewcommand{\lblDutS}{satisfactory}\renewcommand{\lblDutU}{unsatisfactory}
+\renewcommand{\lblSickSec}{Sea sickness:}
+\renewcommand{\lblSickNo}{no}\renewcommand{\lblSickHeavy}{yes}
+\renewcommand{\lblSickWork}{yes, but could work}
+\renewcommand{\lblEndurSec}{Endurance in difficult conditions:}
+\renewcommand{\lblEndG}{good}\renewcommand{\lblEndS}{satisfactory}
+\renewcommand{\lblEndU}{unsatisfactory}\renewcommand{\lblEndNT}{not experienced}
+\renewcommand{\lblCommentsSec}{CAPTAIN'S COMMENTS}
+\renewcommand{\lblCaptainSec}{INFORMATION ABOUT CAPTAIN}
+\renewcommand{\lblPlaceDate}{place and date}
+\renewcommand{\lblCaptainSign}{captain's signature}
+\renewcommand{\lblFootnote}{* if concerns}
+\renewcommand{\lblFootnoteB}{** Required by Polish regulations on water tourism /Dz.U. 2013 nr 0 poz. 460, \S~4 pkt 3/}
+\opinionpage
 
-% --- Dane rejsu ---
-\subsection*{Dane rejsu}
-\begin{tabularx}{\linewidth}{|l|X|l|X|}
-\hline
-Nazwa jachtu & \field{5cm} & Nr rejestracyjny & \field{4cm} \\[6pt]
-\hline
-Kapitan & \field{5cm} & Nr patentu & \field{4cm} \\[6pt]
-\hline
-Trasa & \multicolumn{3}{X|}{\field{10cm}} \\[6pt]
-\hline
-Data od & \field{3.5cm} & Data do & \field{3.5cm} \\[6pt]
-\hline
-Strefa / akwen & \multicolumn{3}{X|}{\field{10cm}} \\[6pt]
-\hline
-Łączna liczba mil morskich & \field{3cm} & Liczba dób & \field{3cm} \\[6pt]
-\hline
-\end{tabularx}
-
-\vspace{0.4cm}
-
-% --- Ocena uczestnika ---
-\subsection*{Ocena uczestnika / praktykanta}
-
-\begin{tabularx}{\linewidth}{|l|X|}
-\hline
-Nazwisko i imię & \field{8cm} \\[6pt]
-\hline
-Data urodzenia & \field{4cm} \\[6pt]
-\hline
-Funkcja na jachcie & \field{6cm} \\[6pt]
-\hline
-Patent / stopień (posiadany) & \field{6cm} \\[6pt]
-\hline
-\end{tabularx}
-
-\vspace{0.4cm}
-
-\subsubsection*{Ocena umiejętności (skala 1–5)}
-\begin{tabularx}{\linewidth}{|X|c|}
-\hline
-\textbf{Umiejętność / zakres} & \textbf{Ocena} \\
-\hline
-Manewrowanie jachtem pod żaglami & \\[4pt]
-\hline
-Manewrowanie pod silnikiem & \\[4pt]
-\hline
-Cumowanie i kotwiczenie & \\[4pt]
-\hline
-Nawigacja (mapy, namiary, GPS) & \\[4pt]
-\hline
-Prognoza pogody i interpretacja & \\[4pt]
-\hline
-Wachta / prowadzenie dziennika & \\[4pt]
-\hline
-Procedury bezpieczeństwa (MOB, ratownictwo) & \\[4pt]
-\hline
-Praca w załodze / dyscyplina & \\[4pt]
-\hline
-Znajomość przepisów drogi morskiej (COLREGS) & \\[4pt]
-\hline
-\end{tabularx}
-
-\vspace{0.4cm}
-
-\subsubsection*{Ocena ogólna}
-\begin{tabularx}{\linewidth}{|X|}
-\hline
-\\[3cm]
-\hline
-\end{tabularx}
-
-\vspace{0.4cm}
-
-\subsubsection*{Zalecenia do dalszego szkolenia}
-\begin{tabularx}{\linewidth}{|X|}
-\hline
-\\[2.5cm]
-\hline
-\end{tabularx}
-
-\vspace{0.4cm}
-
-\subsubsection*{Potwierdzenie zaliczenia rejsu do uprawnień}
-\begin{tabularx}{\linewidth}{|l|X|}
-\hline
-Rejs zalicza się do uprawnień: & \field{7cm} \\[6pt]
-\hline
-Liczba mil morskich do zaliczenia: & \field{4cm} \\[6pt]
-\hline
-\end{tabularx}
-
-\vspace{1cm}
-
-\noindent
-\begin{tabularx}{\linewidth}{X X}
-Podpis i pieczęć kapitana: & Podpis uczestnika (potwierdzenie): \\[1.5cm]
-\rule{6cm}{0.4pt} & \rule{6cm}{0.4pt} \\[0.2cm]
-Imię i nazwisko: \field{4cm} & Imię i nazwisko: \field{4cm} \\[0.3cm]
-Nr patentu: \field{3.5cm} & Data: \field{3cm}
-\end{tabularx}
-
+\end{Form}
 \end{document}

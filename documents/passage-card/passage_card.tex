@@ -101,7 +101,7 @@
   % ---------------- Captain (invisible 50/50 label-field table) ----------------
   \Sec{\lblCaptainSec}
   \noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{10pt}}X@{}}
-    \LF{\lblName}{cap_name}  & \LF{\lblCert}{cap_cert}  \\[3pt]
+    \LF{\lblName}{cap_name}  & \LF{\lblCert}{cap_cert_\Lang}  \\[3pt]
     \LF{\lblPhone}{cap_phone} & \LF{\lblEmail}{cap_email} \\
   \end{tabularx}
 
@@ -161,7 +161,7 @@
 
   % ---------------- Comments ----------------
   \Sec{\lblCaptainComments}
-  \MFld{remarks_captain}{\linewidth}{54pt}\par
+  \MFld{remarks_captain_\Lang}{\linewidth}{54pt}\par
   \vspace{10pt}
   \noindent\begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
     \CFld{cap_place_date}{6cm} & \CFld{cap_signature}{6cm}\\[-2pt]
@@ -171,7 +171,7 @@
   \vspace{0pt plus 1.5fill}
 
   \Sec{\lblOwnerComments}
-  \MFld{remarks_owner}{\linewidth}{54pt}\par
+  \MFld{remarks_owner_\Lang}{\linewidth}{54pt}\par
   \vspace{10pt}
   \noindent\begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
     \CFld{owner_place_date}{6cm} & \CFld{owner_signature}{6cm}\\[-2pt]
@@ -192,12 +192,12 @@
     {\itshape\scriptsize\lblLp} & {\itshape\scriptsize\lblCrewName}
       & {\itshape\scriptsize\lblCrewCert} & {\itshape\scriptsize\lblCrewRank}\\
     \hline
-    \XFld{crew#1_1_lp} & \XFld{crew#1_1_name} & \XFld{crew#1_1_cert} & \XFld{crew#1_1_rank}\\\hline
-    \XFld{crew#1_2_lp} & \XFld{crew#1_2_name} & \XFld{crew#1_2_cert} & \XFld{crew#1_2_rank}\\\hline
-    \XFld{crew#1_3_lp} & \XFld{crew#1_3_name} & \XFld{crew#1_3_cert} & \XFld{crew#1_3_rank}\\\hline
-    \XFld{crew#1_4_lp} & \XFld{crew#1_4_name} & \XFld{crew#1_4_cert} & \XFld{crew#1_4_rank}\\\hline
-    \XFld{crew#1_5_lp} & \XFld{crew#1_5_name} & \XFld{crew#1_5_cert} & \XFld{crew#1_5_rank}\\\hline
-    \XFld{crew#1_6_lp} & \XFld{crew#1_6_name} & \XFld{crew#1_6_cert} & \XFld{crew#1_6_rank}\\\hline
+    \XFld{crew#1_1_lp} & \XFld{crew#1_1_name} & \XFld{crew#1_1_cert_\Lang} & \XFld{crew#1_1_rank_\Lang}\\\hline
+    \XFld{crew#1_2_lp} & \XFld{crew#1_2_name} & \XFld{crew#1_2_cert_\Lang} & \XFld{crew#1_2_rank_\Lang}\\\hline
+    \XFld{crew#1_3_lp} & \XFld{crew#1_3_name} & \XFld{crew#1_3_cert_\Lang} & \XFld{crew#1_3_rank_\Lang}\\\hline
+    \XFld{crew#1_4_lp} & \XFld{crew#1_4_name} & \XFld{crew#1_4_cert_\Lang} & \XFld{crew#1_4_rank_\Lang}\\\hline
+    \XFld{crew#1_5_lp} & \XFld{crew#1_5_name} & \XFld{crew#1_5_cert_\Lang} & \XFld{crew#1_5_rank_\Lang}\\\hline
+    \XFld{crew#1_6_lp} & \XFld{crew#1_6_name} & \XFld{crew#1_6_cert_\Lang} & \XFld{crew#1_6_rank_\Lang}\\\hline
   \end{tabularx}}
 
 % ===========================================================================
@@ -206,6 +206,7 @@
 
 % ----------------------- PAGE 1 : POLISH -----------------------
 \selectlanguage{polish}
+\newcommand{\Lang}{pl}
 \newcommand{\lblAssoc}{POLSKI ZWI\k{A}ZEK \.ZEGLARSKI}
 \newcommand{\lblTitle}{KARTA REJSU}
 \newcommand{\lblCaptainSec}{INFORMACJE O KAPITANIE}
@@ -254,6 +255,7 @@
 
 % ----------------------- PAGE 2 : ENGLISH -----------------------
 \selectlanguage{english}
+\renewcommand{\Lang}{en}
 \renewcommand{\lblAssoc}{POLISH YACHTING ASSOCIATION}
 \renewcommand{\lblTitle}{CAPTAIN'S CERTIFICATE OF PASSAGE}
 \renewcommand{\lblCaptainSec}{INFORMATION ABOUT CAPTAIN}
@@ -289,7 +291,7 @@
 \renewcommand{\lblLp}{No.}
 \renewcommand{\lblCrewName}{Name \& surname}
 \renewcommand{\lblCrewCert}{certificate}
-\renewcommand{\lblCrewRank}{rank}
+\renewcommand{\lblCrewRank}{rank_\Lang}
 \renewcommand{\lblCaptainComments}{CAPTAIN'S COMMENTS}
 \renewcommand{\lblOwnerComments}{OWNER'S COMMENTS}
 \renewcommand{\lblPlaceDate}{place and date}

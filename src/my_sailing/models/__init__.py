@@ -9,16 +9,20 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .base import FormDocument
+from .base import Bilingual, FormDocument
+from .crew_opinion import CrewOpinion, CrewOpinionMember
 from .passage_card import CrewMember, PassageCard
 
 ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = ROOT / "build"
 
 __all__ = [
+    "Bilingual",
     "FormDocument",
     "CrewMember",
     "PassageCard",
+    "CrewOpinion",
+    "CrewOpinionMember",
     "DocumentSpec",
     "DOCUMENTS",
     "get_document",
@@ -45,6 +49,12 @@ DOCUMENTS: dict[str, DocumentSpec] = {
         title="Karta rejsu / Captain's certificate of passage",
         model=PassageCard,
         template=BUILD_DIR / "documents" / "passage-card" / "passage_card.pdf",
+    ),
+    "crew-opinion": DocumentSpec(
+        name="crew-opinion",
+        title="Opinia z rejsu / Crew member's certificate of passage (one per member)",
+        model=CrewOpinion,
+        template=BUILD_DIR / "documents" / "crew-opinion" / "crew_opinion.pdf",
     ),
 }
 

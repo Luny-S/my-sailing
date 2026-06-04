@@ -1,6 +1,6 @@
 {
   "captain_name": "Aleksander Żółć",
-  "captain_cert": "Jachtowy Sternik Morski, nr 12345",
+  "captain_cert": { "pl": "Jachtowy Sternik Morski, nr 12345", "en": "Yachtmaster Offshore, No. 12345" },
   "captain_phone": "+48 600 700 800",
   "captain_email": "aleksander@example.com",
 
@@ -27,12 +27,27 @@
   "trip_nm": "320",
 
   "crew": [
-    { "name": "Aleksander Żółć", "cert": "JSM", "rank": "kapitan" },
-    { "name": "Małgorzata Wiśniewska", "cert": "JS", "rank": "I oficer" },
-    { "name": "Paweł Ćwikła", "cert": "ż.j.", "rank": "załoga" }
+    {
+      "name": "Aleksander Żółć",
+      "cert": "JSM",
+      "rank": { "pl": "kapitan", "en": "captain" }
+    },
+    {
+      "name": "Małgorzata Wiśniewska",
+      "cert": "JS",
+      "rank": { "pl": "I oficer", "en": "first mate" }
+    },
+    {
+      "name": "Paweł Ćwikła",
+      "cert": "ż.j.",
+      "rank": { "pl": "załoga", "en": "crew" }
+    }
   ],
 
-  "remarks_captain": "Rejs przebiegł bez awarii. Załoga spisała się wzorowo przy silnym wietrze na trasie Łeba – Władysławowo.",
+  "remarks_captain": {
+    "pl": "Rejs przebiegł bez awarii. Załoga spisała się wzorowo.",
+    "en": "The cruise went without failures. The crew performed exemplarily."
+  },
   "captain_place_date": "Gdynia, 2026-06-18",
 
   "remarks_owner": "Jacht zdany w stanie dobrym.",

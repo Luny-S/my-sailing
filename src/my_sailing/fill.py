@@ -71,75 +71,76 @@ def _coerce(value: object) -> str:
     return str(value)
 
 
-def fill_pdf(
-    template: Path,
-    data: dict,
-    out_path: Path,
-    *,
-    flatten: bool = True,
-) -> dict:
-    """Fill ``template``'s form fields from ``data`` and write ``out_path``.
+def _truthy(value: object) -> bool:
+    if isinstance(value, str):
+        return value.strip().lower() in {"x", "true", "yes", "1", "on", "✓", "✗"}
+    return bool(value)
 
-    Returns a report dict with ``applied`` / ``unknown`` / ``missing`` keys.
+
+def _fill_open(template: Path, fields: dict, flatten: bool) -> tuple[fitz.Document, set[str]]:
+    """Fill one copy and return the open (unsaved) document + applied keys.
+
+    Text fields: on flatten the borders are baked to static content and the
+    value drawn on top with Latin Modern (Polish-capable); otherwise the value
+    is set on the widget. Checkbox fields: ticked when the value is truthy.
     """
     doc = fitz.open(template)
-    field_names: set[str] = set()
     applied: set[str] = set()
+    to_draw: list[tuple[int, fitz.Rect, str, float, bool]] = []
 
-    if not flatten:
-        # Keep the form interactive: set widget values directly.
-        for page in doc:
-            for w in page.widgets() or []:
-                field_names.add(w.field_name)
-                if w.field_name in data:
-                    w.field_value = _coerce(data[w.field_name])
+    for pno, page in enumerate(doc):
+        for w in page.widgets() or []:
+            name = w.field_name
+            if name not in fields:
+                continue
+            applied.add(name)
+            if w.field_type == fitz.PDF_WIDGET_TYPE_CHECKBOX:
+                if _truthy(fields[name]):
+                    w.field_value = True
                     w.update()
-                    applied.add(w.field_name)
-    else:
-        font_path = _font_path()
-        # 1. capture rectangles + values before the widgets are removed.
-        to_draw: list[tuple[int, fitz.Rect, str, float, bool]] = []
-        for pno, page in enumerate(doc):
-            for w in page.widgets() or []:
-                field_names.add(w.field_name)
-                if w.field_name not in data:
-                    continue
-                text = _coerce(data[w.field_name])
-                applied.add(w.field_name)
-                if not text.strip():
-                    continue
+                continue
+            text = _coerce(fields[name])
+            if not text.strip():
+                continue
+            if flatten:
                 multiline = bool((w.field_flags or 0) & _FF_MULTILINE)
                 size = w.text_fontsize or 9.0
                 to_draw.append((pno, fitz.Rect(w.rect), text, size, multiline))
-
-        # 2. flatten borders/underlines and drop the interactive widgets.
-        doc.bake(annots=True, widgets=True)
-
-        # 3. draw the values on top with a Polish-capable font.
-        for pno, rect, text, size, multiline in to_draw:
-            page = doc[pno]
-            page.insert_font(fontname=_FONT_NAME, fontfile=font_path)
-            if multiline:
-                page.insert_textbox(
-                    rect + (2, 1, -2, -1), text,
-                    fontname=_FONT_NAME, fontfile=font_path,
-                    fontsize=size, align=fitz.TEXT_ALIGN_LEFT,
-                )
             else:
-                baseline = rect.y0 + rect.height / 2 + size * 0.35
-                page.insert_text(
-                    fitz.Point(rect.x0 + 2, baseline), text,
-                    fontname=_FONT_NAME, fontfile=font_path, fontsize=size,
-                )
+                w.field_value = text
+                w.update()
 
+    if flatten:
+        # Bake borders/underlines + checkbox ticks to static content, drop
+        # the widgets, then draw text values on top with a Polish-capable font.
+        doc.bake(annots=True, widgets=True)
+        if to_draw:
+            font_path = _font_path()
+            for pno, rect, text, size, multiline in to_draw:
+                page = doc[pno]
+                page.insert_font(fontname=_FONT_NAME, fontfile=font_path)
+                if multiline:
+                    page.insert_textbox(
+                        rect + (2, 1, -2, -1), text,
+                        fontname=_FONT_NAME, fontfile=font_path,
+                        fontsize=size, align=fitz.TEXT_ALIGN_LEFT,
+                    )
+                else:
+                    baseline = rect.y0 + rect.height / 2 + size * 0.35
+                    page.insert_text(
+                        fitz.Point(rect.x0 + 2, baseline), text,
+                        fontname=_FONT_NAME, fontfile=font_path, fontsize=size,
+                    )
+    return doc, applied
+
+
+def fill_pdf(template: Path, data: dict, out_path: Path, *, flatten: bool = True) -> dict:
+    """Fill one form and write ``out_path``. Returns an applied/unknown report."""
+    doc, applied = _fill_open(template, data, flatten)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     doc.save(out_path, garbage=4, deflate=True)
     doc.close()
-    return {
-        "applied": sorted(applied),
-        "unknown": sorted(set(data) - field_names),
-        "missing": sorted(field_names - applied),
-    }
+    return {"applied": sorted(applied), "unknown": sorted(set(data) - applied)}
 
 
 def fill_document(
@@ -149,12 +150,26 @@ def fill_document(
     *,
     flatten: bool = True,
 ) -> dict:
-    """Validate ``data`` against the document's model, adapt it to form fields
-    and write the filled PDF. Raises ``pydantic.ValidationError`` on bad input.
+    """Validate ``data``, adapt it, and write the filled PDF.
+
+    Documents that fan out (one copy per crew member) produce a single PDF with
+    all copies concatenated. Raises ``pydantic.ValidationError`` on bad input.
     """
     model = spec.model.model_validate(data)
-    fields = model.to_form_fields()
-    return fill_pdf(spec.template, fields, out_path, flatten=flatten)
+    copies = model.to_copies() or [{}]
+
+    out_doc = fitz.open()
+    applied = 0
+    for fields in copies:
+        part, keys = _fill_open(spec.template, fields, flatten)
+        out_doc.insert_pdf(part)
+        part.close()
+        applied += len(keys)
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_doc.save(out_path, garbage=4, deflate=True)
+    out_doc.close()
+    return {"copies": len(copies), "applied": applied}
 
 
 def list_fields(template: Path) -> list[str]:
@@ -170,6 +185,8 @@ def _blank_for(annotation) -> object:
 
     origin = typing.get_origin(annotation)
     args = [a for a in typing.get_args(annotation) if a is not type(None)]
+    if origin is typing.Literal:
+        return None  # a choice field — leave null rather than an invalid ""
     if origin in (list, set, tuple):
         inner = args[0] if args else str
         if isinstance(inner, type) and issubclass(inner, BaseModel):
@@ -177,10 +194,12 @@ def _blank_for(annotation) -> object:
         return []
     if isinstance(annotation, type) and issubclass(annotation, BaseModel):
         return blank_template(annotation)
-    # Optional[...] / unions: peek at the first concrete arg
+    # Optional[...] / unions: peek at the concrete arg (model or Literal)
     for a in args:
         if isinstance(a, type) and issubclass(a, BaseModel):
             return blank_template(a)
+        if typing.get_origin(a) is typing.Literal:
+            return None
     return ""
 
 
@@ -257,4 +276,6 @@ def main() -> None:
         sys.exit(f"Invalid {spec.name} data in {args.data}:\n{errors}")
 
     mode = "editable" if args.keep_editable else "flattened"
-    print(f"Wrote {args.output}  ({len(report['applied'])} field(s) filled, {mode})")
+    copies = report.get("copies", 1)
+    suffix = f", {copies} copies" if copies != 1 else ""
+    print(f"Wrote {args.output}  ({report['applied']} field(s) filled, {mode}{suffix})")

@@ -1,0 +1,60 @@
+{
+  "yacht_reg": "POL-2010",
+  "yacht_name": "Biały Żagiel",
+  "yacht_loa": "11,90",
+  "yacht_homeport": "Gdańsk",
+  "yacht_engine": "21",
+
+  "logbook_no": "7/2026",
+  "port_embark": "Świnoujście",
+  "date_embark": "2026-06-10",
+  "port_disembark": "Gdynia",
+  "date_disembark": "2026-06-18",
+  "visited_ports": "Świnoujście – Kołobrzeg – Łeba – Władysławowo – Gdynia",
+  "tidal_ports_count": "0",
+  "cruise_days": "8",
+
+  "hours_total": "96",
+  "hours_sails": "70",
+  "hours_engine": "26",
+  "hours_tidal": "0",
+  "hours_mooring": "88",
+  "trip_nm": "320",
+
+  "captain_name": "Aleksander Żółć",
+  "captain_cert": { "pl": "Jachtowy Sternik Morski, nr 12345", "en": "Yachtmaster Offshore, No. 12345" },
+  "captain_phone": "+48 600 700 800",
+  "captain_email": "aleksander@example.com",
+  "captain_place_date": "Gdynia, 2026-06-18",
+
+  "crew": [
+    {
+      "name": "Małgorzata Wiśniewska",
+      "cert": { "pl": "Jachtowy Sternik Morski", "en": "Yachtmaster Offshore" },
+      "phone": "+48 601 111 222",
+      "email": "m.wisniewska@example.com",
+      "rank": { "pl": "I oficer", "en": "first mate" },
+      "opinion": "positive",
+      "duties": "very_good",
+      "seasickness": "none",
+      "endurance": "good",
+      "remarks": {
+        "pl": "Bardzo dobra organizacja wachty, samodzielna nawigacja.",
+        "en": "Excellent watch organisation, independent navigation."
+      }
+    },
+    {
+      "name": "Paweł Ćwikła",
+      "cert": { "pl": "Żeglarz jachtowy", "en": "Inland Skipper" },
+      "rank": { "pl": "załoga", "en": "crew" },
+      "opinion": "positive",
+      "duties": "good",
+      "seasickness": "could_work",
+      "endurance": "satisfactory",
+      "remarks": {
+        "pl": "Solidny członek załogi, szybko się uczy.",
+        "en": "Solid crew member, quick learner."
+      }
+    }
+  ]
+}
