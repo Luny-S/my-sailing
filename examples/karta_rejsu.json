@@ -1,0 +1,40 @@
+{
+  "captain_name": "Aleksander Żółć",
+  "captain_cert": "Jachtowy Sternik Morski, nr 12345",
+  "captain_phone": "+48 600 700 800",
+  "captain_email": "aleksander@example.com",
+
+  "yacht_reg": "POL-2010",
+  "yacht_name": "Biały Żagiel",
+  "yacht_loa": "11,90",
+  "yacht_homeport": "Gdańsk",
+  "yacht_engine": "21",
+
+  "logbook_no": "7/2026",
+  "port_embark": "Świnoujście",
+  "date_embark": "2026-06-10",
+  "port_disembark": "Gdynia",
+  "date_disembark": "2026-06-18",
+  "visited_ports": "Świnoujście – Kołobrzeg – Łeba – Władysławowo – Gdynia",
+  "tidal_ports_count": "0",
+  "cruise_days": "8",
+
+  "hours_total": "96",
+  "hours_sails": "70",
+  "hours_engine": "26",
+  "hours_tidal": "0",
+  "hours_mooring": "88",
+  "trip_nm": "320",
+
+  "crew": [
+    { "name": "Aleksander Żółć", "cert": "JSM", "rank": "kapitan" },
+    { "name": "Małgorzata Wiśniewska", "cert": "JS", "rank": "I oficer" },
+    { "name": "Paweł Ćwikła", "cert": "ż.j.", "rank": "załoga" }
+  ],
+
+  "remarks_captain": "Rejs przebiegł bez awarii. Załoga spisała się wzorowo przy silnym wietrze na trasie Łeba – Władysławowo.",
+  "captain_place_date": "Gdynia, 2026-06-18",
+
+  "remarks_owner": "Jacht zdany w stanie dobrym.",
+  "owner_place_date": "Gdynia, 2026-06-18"
+}

@@ -74,19 +74,69 @@ docker run --rm -v "$(pwd)/build:/app/build" my-sailing
 
 ---
 
+## Pre-filling forms (karta rejsu)
+
+`karta-rejsu` is a fillable PDF form (real AcroForm fields). You can pre-fill it
+from a JSON file and get a flattened, ready-to-print PDF. The JSON is validated
+against a [pydantic model](src/my_sailing/models/karta_rejsu.py); an internal
+adapter maps it to the PDF's field names. Polish diacritics are rendered with
+Latin Modern (the document's own typeface).
+
+```bash
+# Build the form first, then fill it
+uv run build-docs
+
+# See which documents can be filled
+uv run fill-doc --list
+
+# Fill from JSON and flatten (default)
+uv run fill-doc karta-rejsu examples/karta_rejsu.json -o tmp/karta.pdf
+
+# Keep it interactive instead of flattening
+uv run fill-doc karta-rejsu examples/karta_rejsu.json -o tmp/karta.pdf --keep-editable
+
+# Inspect the input shape / underlying field names
+uv run fill-doc karta-rejsu --schema
+uv run fill-doc karta-rejsu --fields
+```
+
+Crew is a list of objects (`Lp.` is auto-numbered); the first six fill the
+left on-page table, the next six the right. See [examples/karta_rejsu.json](examples/karta_rejsu.json).
+
+You can also call it from Python:
+
+```python
+import json
+from my_sailing.fill import fill_document
+from my_sailing.models import get_document
+
+spec = get_document("karta-rejsu")
+data = json.loads(open("examples/karta_rejsu.json").read())
+fill_document(spec, data, "tmp/karta.pdf")            # flatten=True by default
+```
+
+---
+
 ## Project structure
 
 ```
 my-sailing/
 ├── pyproject.toml          # Python project (uv / hatchling)
-├── Dockerfile              # Multi-stage: uv + texlive
+├── Dockerfile              # uv + texlive (+ git)
+├── examples/
+│   └── karta_rejsu.json    # sample data for the karta rejsu form
 ├── src/
 │   └── my_sailing/
-│       └── build.py        # PDF build script (pdflatex wrapper)
+│       ├── build.py        # compile all documents/*.tex -> build/
+│       ├── fill.py         # fill + flatten a form PDF from JSON
+│       └── models/         # pydantic models + document registry
+│           ├── base.py
+│           └── karta_rejsu.py
 └── documents/
     ├── shared/
-    │   └── preamble.tex    # Shared LaTeX preamble (\input'd by every doc)
-    ├── karta-rejsu/
+    │   ├── preamble.tex    # shared LaTeX preamble (\input'd by every doc)
+    │   └── assets/         # logos / images (e.g. pzz-logo.png)
+    ├── karta-rejsu/        # fillable PZŻ voyage card (PL + EN)
     ├── opinia-z-rejsu/
     ├── safety-briefing/
     ├── dziennik-jachtu/
@@ -111,6 +161,6 @@ my-sailing/
 # Run the builder in watch-like fashion (re-run manually after edits)
 uv run build-docs
 
-# Or compile a specific file directly
-pdflatex -output-directory=build/karta-rejsu documents/karta-rejsu/karta_rejsu_baltyk.tex
+# Or compile a single file directly (run from its folder so \input resolves)
+cd documents/karta-rejsu && latexmk -pdf -cd karta_rejsu.tex
 ```

@@ -21,6 +21,11 @@
 \definecolor{pzznavy}{RGB}{25,38,80}
 \definecolor{fieldline}{gray}{0.55}
 
+% Treat "_" as an ordinary character so it survives literally in AcroForm
+% field names (otherwise hyperref drops it: cap_name -> capname). Must come
+% before the field-helper macros below are defined.
+\catcode`\_=12\relax
+
 % ---------------------------------------------------------------------------
 % Form-field helpers (real AcroForm fields — interactive + Python-prefillable)
 % ---------------------------------------------------------------------------
