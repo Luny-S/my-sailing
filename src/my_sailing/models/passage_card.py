@@ -15,14 +15,13 @@ MAX_CREW = 12  # two on-page tables of 6 rows each
 
 
 class CrewMember(BaseModel):
-    """One crew row. ``lp`` defaults to the position in the crew list."""
+    """One crew row. The ``Lp.`` ordinal is filled automatically from order."""
 
     model_config = ConfigDict(extra="forbid")
 
     name: str | None = Field(default=None, description="Imię i nazwisko")
     cert: str | None = Field(default=None, description="stopień żegl./mot.")
     rank: str | None = Field(default=None, description="funkcja na jachcie")
-    lp: int | str | None = Field(default=None, description="Lp. (auto if omitted)")
 
 
 class PassageCard(FormDocument):
@@ -98,14 +97,13 @@ class PassageCard(FormDocument):
         put(f, "h_mooring", self.hours_mooring)
         put(f, "trip_nm", self.trip_nm)
 
-        for i, member in enumerate(self.crew[:MAX_CREW]):
+        # Skip empty rows, then number the real crew consecutively (Lp.).
+        real_crew = [m for m in self.crew[:MAX_CREW] if m.name or m.cert or m.rank]
+        for i, member in enumerate(real_crew):
             side = "L" if i < 6 else "R"
             row = i % 6 + 1
             prefix = f"crew{side}_{row}_"
-            lp = member.lp
-            if lp is None or str(lp).strip() == "":
-                lp = i + 1  # auto-number when omitted/blank
-            put(f, prefix + "lp", lp)
+            put(f, prefix + "lp", i + 1)  # Lp. is always the position in order
             put(f, prefix + "name", member.name)
             put(f, prefix + "cert", member.cert)
             put(f, prefix + "rank", member.rank)
