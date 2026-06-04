@@ -56,8 +56,21 @@
 % Section heading (bold, small vertical space)
 \newcommand{\Sec}[1]{\vspace{4pt}{\bfseries #1}\vspace{1pt}\par}
 
-% Holds the title box so the logo can be scaled to its exact height
+% Header machinery: logo height matches the title box, and the box right
+% edge fills exactly to the margin (aligned with the tables below).
 \newsavebox{\hdrbox}
+\newsavebox{\logobox}
+\newlength{\hdrh}
+\newlength{\hdrw}
+% The bordered title box, sized to a given TOTAL width #1
+\newcommand{\titlebox}[1]{%
+  \begin{tabular}{|>{\centering\arraybackslash}m{\dimexpr#1-2\tabcolsep-2\arrayrulewidth\relax}|}
+    \hline
+    \rule[-3pt]{0pt}{15pt}\textbf{\textls[260]{\lblAssoc}}\\
+    \hline
+    \rule[-6pt]{0pt}{26pt}\fontsize{17}{20}\selectfont\bfseries\textls[90]{\lblTitle}\\
+    \hline
+  \end{tabular}}
 
 % ===========================================================================
 % One full page of the form. Field NAMES are hard-coded here so that calling
@@ -66,18 +79,18 @@
 % Labels are taken from \lbl... macros, redefined between the two calls.
 % ===========================================================================
 \newcommand{\kartapage}{%
-  % ---------------- Header (logo height matches the title box exactly) -------
-  \savebox{\hdrbox}{%
-    \begin{tabular}{|>{\centering\arraybackslash}m{\dimexpr\linewidth-2.2cm\relax}|}
-      \hline
-      \rule[-3pt]{0pt}{15pt}\textbf{\textls[260]{\lblAssoc}}\\
-      \hline
-      \rule[-6pt]{0pt}{26pt}\fontsize{17}{20}\selectfont\bfseries\textls[90]{\lblTitle}\\
-      \hline
-    \end{tabular}}%
+  % ---------------- Header --------------------------------------------------
+  % Pass 1: typeset the box at full width to learn its height (height is set
+  % by the struts, independent of width), then scale the logo to that height.
+  \savebox{\hdrbox}{\titlebox{\linewidth}}%
+  \setlength{\hdrh}{\dimexpr\ht\hdrbox+\dp\hdrbox\relax}%
+  \savebox{\logobox}{\includegraphics[height=\hdrh]{../shared/assets/pzz-logo}}%
+  % Pass 2: box fills exactly the width left after logo + 4pt gap, so its
+  % right edge lands on the margin (aligned with the tables below).
+  \setlength{\hdrw}{\dimexpr\linewidth-\wd\logobox-4pt\relax}%
+  \savebox{\hdrbox}{\titlebox{\hdrw}}%
   \noindent
-  \raisebox{-\dp\hdrbox}{\includegraphics[height=\dimexpr\ht\hdrbox+\dp\hdrbox\relax]{../shared/assets/pzz-logo}}%
-  \hspace{4pt}\usebox{\hdrbox}\par
+  \raisebox{-\dp\hdrbox}{\usebox{\logobox}}\hspace{4pt}\usebox{\hdrbox}\par
   \vspace{4pt}
 
   % ---------------- Captain (invisible 50/50 label-field table) ----------------
@@ -114,8 +127,10 @@
     \hline
   \end{tabularx}
 
-  % ---------------- Hours table (full width, weighted columns) ----------------
+  % ---------------- Hours table (full width, weighted, vertically centered) ---
   \vspace{4pt}
+  {\renewcommand{\tabularxcolumn}[1]{m{##1}}% X cells centered vertically
+  \setlength{\extrarowheight}{2pt}%
   \noindent\begin{tabularx}{\linewidth}{|Y{1.16}|Y{0.78}|Y{0.78}|Y{0.85}|Y{1.50}|Y{0.93}|}
     \hline
     \multicolumn{4}{|c|}{\footnotesize\lblHoursUnderway}
@@ -123,13 +138,13 @@
       & \multirow{2}{*}{\footnotesize\shortstack{\lblTripA\\\lblTripB\\\lblTripC}}\\
     \cline{1-5}
     {\scriptsize\shortstack{\lblTotalA\\\lblTotalB}} & {\scriptsize\lblUnderSails}
-      & {\scriptsize\lblUsingEngine} & {\scriptsize\lblOnTidal}
+      & {\scriptsize\lblUsingEngine} & {\scriptsize\shortstack{\lblOnTidalA\\\lblOnTidalB}}
       & {\scriptsize\lblInHarbours} & \\
     \hline
     \XFld{h_total} & \XFld{h_sails} & \XFld{h_engine}
       & \XFld{h_tidal} & \XFld{h_mooring} & \XFld{trip_nm}\\
     \hline
-  \end{tabularx}
+  \end{tabularx}}
 
   % ---------------- Crew ----------------
   \Sec{\lblCrewSec}
@@ -215,7 +230,7 @@
 \newcommand{\lblTotalA}{razem}\newcommand{\lblTotalB}{(pod \.zaglami i na silniku)}
 \newcommand{\lblUnderSails}{pod \.zaglami}
 \newcommand{\lblUsingEngine}{na silniku}
-\newcommand{\lblOnTidal}{po wodach p\l ywowych}
+\newcommand{\lblOnTidalA}{po wodach}\newcommand{\lblOnTidalB}{p\l ywowych}
 \newcommand{\lblInHarbours}{w portach i na kotwicy}
 \newcommand{\lblCrewSec}{INFORMACJE O ZA\L ODZE}
 \newcommand{\lblLp}{Lp.}
@@ -263,7 +278,7 @@
 \renewcommand{\lblTotalA}{total}\renewcommand{\lblTotalB}{(sails \& engine)}
 \renewcommand{\lblUnderSails}{under sails}
 \renewcommand{\lblUsingEngine}{using engine}
-\renewcommand{\lblOnTidal}{on tidal waters}
+\renewcommand{\lblOnTidalA}{on tidal}\renewcommand{\lblOnTidalB}{waters}
 \renewcommand{\lblInHarbours}{in harbours, on anchor}
 \renewcommand{\lblCrewSec}{INFORMATION ABOUT CREW}
 \renewcommand{\lblLp}{No.}
