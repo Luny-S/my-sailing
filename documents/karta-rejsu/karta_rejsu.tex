@@ -1,0 +1,271 @@
+\documentclass[a4paper,10pt]{article}
+\input{../shared/preamble}
+
+% --- Form / appearance packages (must come after the shared preamble) ---
+% letter-spacing via \textls; expansion/protrusion off (bitmap CM fonts)
+\usepackage[expansion=false,protrusion=false]{microtype}
+\usepackage{colortbl}       % \columncolor for the navy logo cell
+\usepackage[
+  pdftitle={Karta rejsu / Captain's certificate of passage},
+  pdflang={pl},
+  hidelinks
+]{hyperref}
+
+% Tighter margins than the shared preamble (dense single-page form)
+\geometry{top=1.2cm,bottom=1.2cm,left=1.4cm,right=1.4cm}
+
+% No running header/footer on this form
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\definecolor{pzznavy}{RGB}{25,38,80}
+\definecolor{fieldline}{gray}{0.55}
+
+% ---------------------------------------------------------------------------
+% Form-field helpers (real AcroForm fields — interactive + Python-prefillable)
+% ---------------------------------------------------------------------------
+% Inline underlined field: \Fld{name}{width}
+\newcommand{\Fld}[2]{%
+  \TextField[name=#1,width=#2,height=11pt,charsize=9pt,
+    borderstyle=U,borderwidth=0.6,bordercolor={0.55 0.55 0.55},
+    backgroundcolor={},color={0 0 0}]{}}
+% Borderless field that fills a table cell: \CFld{name}{width}
+\newcommand{\CFld}[2]{%
+  \TextField[name=#1,width=#2,height=12pt,charsize=9pt,
+    borderwidth=0,bordercolor={},backgroundcolor={},color={0 0 0}]{}}
+% Multiline field (framed light box): \MFld{name}{width}{height}
+\newcommand{\MFld}[3]{%
+  \TextField[name=#1,width=#2,height=#3,charsize=9pt,multiline=true,
+    borderstyle=U,borderwidth=0.6,bordercolor={0.55 0.55 0.55},
+    backgroundcolor={},color={0 0 0}]{}}
+% Label + stretchy field that fills the rest of the current line/cell width:
+% \LF{label}{name}  — used to build invisible 50/50 label-field tables.
+\newlength{\lftmp}
+\newcommand{\LF}[2]{%
+  \settowidth{\lftmp}{#1\,}%
+  #1\,\TextField[name=#2,width=\dimexpr\linewidth-\lftmp-2pt\relax,height=11pt,
+    charsize=9pt,borderstyle=U,borderwidth=0.6,bordercolor={0.55 0.55 0.55},
+    backgroundcolor={},color={0 0 0}]{}}
+
+% Section heading (bold, small vertical space)
+\newcommand{\Sec}[1]{\vspace{4pt}{\bfseries #1}\vspace{1pt}\par}
+
+% Holds the title box so the logo can be scaled to its exact height
+\newsavebox{\hdrbox}
+
+% ===========================================================================
+% One full page of the form. Field NAMES are hard-coded here so that calling
+% \kartapage twice (PL + EN) produces ONE shared field per name across both
+% pages: filling once (interactively or from Python) populates both languages.
+% Labels are taken from \lbl... macros, redefined between the two calls.
+% ===========================================================================
+\newcommand{\kartapage}{%
+  % ---------------- Header (logo height matches the title box exactly) -------
+  \savebox{\hdrbox}{%
+    \begin{tabular}{|>{\centering\arraybackslash}m{\dimexpr\linewidth-2.2cm\relax}|}
+      \hline
+      \rule[-3pt]{0pt}{15pt}\textbf{\textls[260]{\lblAssoc}}\\
+      \hline
+      \rule[-6pt]{0pt}{26pt}\fontsize{17}{20}\selectfont\bfseries\textls[90]{\lblTitle}\\
+      \hline
+    \end{tabular}}%
+  \noindent
+  \raisebox{-\dp\hdrbox}{\includegraphics[height=\dimexpr\ht\hdrbox+\dp\hdrbox\relax]{../shared/assets/pzz-logo}}%
+  \hspace{4pt}\usebox{\hdrbox}\par
+  \vspace{4pt}
+
+  % ---------------- Captain (invisible 50/50 label-field table) ----------------
+  \Sec{\lblCaptainSec}
+  \noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{10pt}}X@{}}
+    \LF{\lblName}{cap_name}  & \LF{\lblCert}{cap_cert}  \\[3pt]
+    \LF{\lblPhone}{cap_phone} & \LF{\lblEmail}{cap_email} \\
+  \end{tabularx}
+
+  % ---------------- Yacht ----------------
+  \Sec{\lblYachtSec}
+  \lblRegNo~\Fld{yacht_reg}{2.6cm}\quad\lblYachtName~\Fld{yacht_name}{6.0cm}%
+    \hfill\lblLOA~\Fld{yacht_loa}{2.2cm}~[m]\par
+  \vspace{2pt}
+  \lblHomePort~\Fld{yacht_homeport}{8.4cm}\hfill\lblEnginePower~\Fld{yacht_engine}{2.2cm}~[kW]\par
+
+  % ---------------- Cruise ----------------
+  \Sec{\lblCruiseSec}
+  \noindent\LF{\lblBasedOn}{cruise_logbook}\par
+  \vspace{3pt}
+  \setlength{\extrarowheight}{2pt}
+  \noindent\begin{tabularx}{\linewidth}{|X|p{3.0cm}|p{4.0cm}|}
+    \hline
+    \lblPortEmbark~\CFld{port_embark}{4.0cm} & \lblDate~\CFld{date_embark}{1.6cm}
+      & \lblTidal~\textbf{\lblYesNo} \\
+    \hline
+    \lblPortDisembark~\CFld{port_disembark}{4.0cm} & \lblDate~\CFld{date_disembark}{1.6cm}
+      & \lblTidal~\textbf{\lblYesNo} \\
+    \hline
+    \multicolumn{3}{|l|}{\lblVisitedPorts}\\[-2pt]
+    \multicolumn{3}{|l|}{\MFld{visited_ports}{17.0cm}{44pt}}\\
+    \hline
+    \lblTidalCount~\CFld{tidal_count}{2.0cm} & \multicolumn{2}{l|}{\lblCruiseDays~\CFld{cruise_days}{2.0cm}}\\
+    \hline
+  \end{tabularx}
+
+  % ---------------- Hours table ----------------
+  \vspace{4pt}
+  \noindent\begin{tabular}{|>{\centering\arraybackslash}m{3.0cm}|>{\centering\arraybackslash}m{2.0cm}|>{\centering\arraybackslash}m{2.0cm}|>{\centering\arraybackslash}m{2.2cm}|>{\centering\arraybackslash}m{3.9cm}|>{\centering\arraybackslash}m{2.4cm}|}
+    \hline
+    \multicolumn{4}{|c|}{\footnotesize\lblHoursUnderway}
+      & \multicolumn{1}{c|}{\footnotesize\lblHoursMooring}
+      & \multirow{2}{*}{\footnotesize\shortstack{\lblTripA\\\lblTripB\\\lblTripC}}\\
+    \cline{1-5}
+    {\scriptsize\shortstack{\lblTotalA\\\lblTotalB}} & {\scriptsize\lblUnderSails}
+      & {\scriptsize\lblUsingEngine} & {\scriptsize\lblOnTidal}
+      & {\scriptsize\lblInHarbours} & \\
+    \hline
+    \CFld{h_total}{2.7cm} & \CFld{h_sails}{1.8cm} & \CFld{h_engine}{1.8cm}
+      & \CFld{h_tidal}{2.0cm} & \CFld{h_mooring}{3.6cm} & \CFld{trip_nm}{2.1cm}\\
+    \hline
+  \end{tabular}
+
+  % ---------------- Crew ----------------
+  \Sec{\lblCrewSec}
+  \noindent
+  \begin{minipage}[t]{0.49\linewidth}\crewtable{L}\end{minipage}\hfill
+  \begin{minipage}[t]{0.49\linewidth}\crewtable{R}\end{minipage}
+
+  % ---------------- Comments ----------------
+  \Sec{\lblCaptainComments}
+  \MFld{remarks_captain}{\linewidth}{40pt}\par
+  \vspace{6pt}
+  \noindent\begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+    \CFld{cap_place_date}{6cm} & \CFld{cap_signature}{6cm}\\[-2pt]
+    {\itshape\footnotesize\lblPlaceDate} & {\itshape\footnotesize\lblCaptainSign}\\
+  \end{tabularx}
+
+  \Sec{\lblOwnerComments}
+  \MFld{remarks_owner}{\linewidth}{40pt}\par
+  \vspace{6pt}
+  \noindent\begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+    \CFld{owner_place_date}{6cm} & \CFld{owner_signature}{6cm}\\[-2pt]
+    {\itshape\footnotesize\lblPlaceDate} & {\itshape\footnotesize\lblOwnerSign}\\
+  \end{tabularx}
+
+  \vspace{4pt}
+  \rule{6cm}{0.4pt}\par
+  {\itshape\footnotesize\lblFootnote}
+}
+
+% Crew sub-table: #1 = L or R (field-name prefix)
+\newcommand{\crewtable}[1]{%
+  \setlength{\extrarowheight}{1pt}%
+  \begin{tabular}{|>{\centering\arraybackslash}m{0.6cm}|m{3.6cm}|>{\centering\arraybackslash}m{1.4cm}|>{\centering\arraybackslash}m{1.3cm}|}
+    \hline
+    {\itshape\scriptsize\lblLp} & {\itshape\scriptsize\lblCrewName}
+      & {\itshape\scriptsize\lblCrewCert} & {\itshape\scriptsize\lblCrewRank}\\
+    \hline
+    \CFld{crew#1_1_lp}{0.5cm} & \CFld{crew#1_1_name}{3.5cm} & \CFld{crew#1_1_cert}{1.3cm} & \CFld{crew#1_1_rank}{1.2cm}\\\hline
+    \CFld{crew#1_2_lp}{0.5cm} & \CFld{crew#1_2_name}{3.5cm} & \CFld{crew#1_2_cert}{1.3cm} & \CFld{crew#1_2_rank}{1.2cm}\\\hline
+    \CFld{crew#1_3_lp}{0.5cm} & \CFld{crew#1_3_name}{3.5cm} & \CFld{crew#1_3_cert}{1.3cm} & \CFld{crew#1_3_rank}{1.2cm}\\\hline
+    \CFld{crew#1_4_lp}{0.5cm} & \CFld{crew#1_4_name}{3.5cm} & \CFld{crew#1_4_cert}{1.3cm} & \CFld{crew#1_4_rank}{1.2cm}\\\hline
+    \CFld{crew#1_5_lp}{0.5cm} & \CFld{crew#1_5_name}{3.5cm} & \CFld{crew#1_5_cert}{1.3cm} & \CFld{crew#1_5_rank}{1.2cm}\\\hline
+    \CFld{crew#1_6_lp}{0.5cm} & \CFld{crew#1_6_name}{3.5cm} & \CFld{crew#1_6_cert}{1.3cm} & \CFld{crew#1_6_rank}{1.2cm}\\\hline
+  \end{tabular}}
+
+% ===========================================================================
+\begin{document}
+\begin{Form}
+
+% ----------------------- PAGE 1 : POLISH -----------------------
+\selectlanguage{polish}
+\newcommand{\lblAssoc}{POLSKI ZWI\k{A}ZEK \.ZEGLARSKI}
+\newcommand{\lblTitle}{KARTA REJSU}
+\newcommand{\lblCaptainSec}{INFORMACJE O KAPITANIE}
+\newcommand{\lblName}{Imi\k{e} i nazwisko:}
+\newcommand{\lblCert}{stop. \.zegl./mot. i nr pat.:}
+\newcommand{\lblPhone}{tel.:}
+\newcommand{\lblEmail}{adres e-mail:}
+\newcommand{\lblYachtSec}{INFORMACJE O JACHCIE}
+\newcommand{\lblRegNo}{Nr rej.:}
+\newcommand{\lblYachtName}{nazwa jachtu:}
+\newcommand{\lblLOA}{Lc=}
+\newcommand{\lblHomePort}{port macierzysty:}
+\newcommand{\lblEnginePower}{moc silnika:}
+\newcommand{\lblCruiseSec}{INFORMACJE O REJSIE}
+\newcommand{\lblBasedOn}{Wpisu dokonano na podstawie dziennika jachtowego*, nr pływania}
+\newcommand{\lblPortEmbark}{Port zaokr\k{e}towania:}
+\newcommand{\lblPortDisembark}{Port wyokr\k{e}towania:}
+\newcommand{\lblDate}{Data:}
+\newcommand{\lblTidal}{P\l ywowy:}
+\newcommand{\lblYesNo}{TAK / NIE}
+\newcommand{\lblVisitedPorts}{Odwiedzone porty:}
+\newcommand{\lblTidalCount}{W tym liczba port\'ow p\l ywowych:}
+\newcommand{\lblCruiseDays}{Liczba dni rejsu:}
+\newcommand{\lblHoursUnderway}{GODZINY \.ZEGLUGI}
+\newcommand{\lblHoursMooring}{GODZINY POSTOJU}
+\newcommand{\lblTripA}{PRZEBYTO}\newcommand{\lblTripB}{MIL}\newcommand{\lblTripC}{MORSKICH}
+\newcommand{\lblTotalA}{razem}\newcommand{\lblTotalB}{(pod \.zaglami i na silniku)}
+\newcommand{\lblUnderSails}{pod \.zaglami}
+\newcommand{\lblUsingEngine}{na silniku}
+\newcommand{\lblOnTidal}{po wodach p\l ywowych}
+\newcommand{\lblInHarbours}{w portach i na kotwicy}
+\newcommand{\lblCrewSec}{INFORMACJE O ZA\L ODZE}
+\newcommand{\lblLp}{Lp.}
+\newcommand{\lblCrewName}{Imi\k{e} i nazwisko}
+\newcommand{\lblCrewCert}{stopie\'n \.zegl./mot.}
+\newcommand{\lblCrewRank}{funkcja na jachcie}
+\newcommand{\lblCaptainComments}{UWAGI KAPITANA}
+\newcommand{\lblOwnerComments}{UWAGI ARMATORA/W\L A\'SCICIELA JACHTU}
+\newcommand{\lblPlaceDate}{miejscowo\'s\'c, data}
+\newcommand{\lblCaptainSign}{podpis kapitana}
+\newcommand{\lblOwnerSign}{podpis armatora/w\l a\'sciciela jachtu}
+\newcommand{\lblFootnote}{* je\.zeli by\l{} prowadzony}
+\kartapage
+
+\clearpage
+
+% ----------------------- PAGE 2 : ENGLISH -----------------------
+\selectlanguage{english}
+\renewcommand{\lblAssoc}{POLISH YACHTING ASSOCIATION}
+\renewcommand{\lblTitle}{CAPTAIN'S CERTIFICATE OF PASSAGE}
+\renewcommand{\lblCaptainSec}{INFORMATION ABOUT CAPTAIN}
+\renewcommand{\lblName}{Name \& surname:}
+\renewcommand{\lblCert}{cert. of sailing/motor competency, No.:}
+\renewcommand{\lblPhone}{phone:}
+\renewcommand{\lblEmail}{email:}
+\renewcommand{\lblYachtSec}{YACHT'S INFORMATION}
+\renewcommand{\lblRegNo}{Reg. No.:}
+\renewcommand{\lblYachtName}{name of yacht:}
+\renewcommand{\lblLOA}{LOA:}
+\renewcommand{\lblHomePort}{home port:}
+\renewcommand{\lblEnginePower}{Engine power:}
+\renewcommand{\lblCruiseSec}{CRUISE INFORMATION}
+\renewcommand{\lblBasedOn}{Based on Vessel Log Book*, voyage No:}
+\renewcommand{\lblPortEmbark}{Port of embarkation:}
+\renewcommand{\lblPortDisembark}{Port of disembarkation:}
+\renewcommand{\lblDate}{Date:}
+\renewcommand{\lblTidal}{Tidal port:}
+\renewcommand{\lblYesNo}{YES / NO}
+\renewcommand{\lblVisitedPorts}{Visited ports:}
+\renewcommand{\lblTidalCount}{Number of tidal ports:}
+\renewcommand{\lblCruiseDays}{Number of cruise days:}
+\renewcommand{\lblHoursUnderway}{NUMBER OF HOURS UNDERWAY}
+\renewcommand{\lblHoursMooring}{NUMBER OF MOORING HOURS}
+\renewcommand{\lblTripA}{}\renewcommand{\lblTripB}{TRIP NM}\renewcommand{\lblTripC}{}
+\renewcommand{\lblTotalA}{total}\renewcommand{\lblTotalB}{(sails \& engine)}
+\renewcommand{\lblUnderSails}{under sails}
+\renewcommand{\lblUsingEngine}{using engine}
+\renewcommand{\lblOnTidal}{on tidal waters}
+\renewcommand{\lblInHarbours}{in harbours, on anchor}
+\renewcommand{\lblCrewSec}{INFORMATION ABOUT CREW}
+\renewcommand{\lblLp}{No.}
+\renewcommand{\lblCrewName}{Name \& surname}
+\renewcommand{\lblCrewCert}{certificate}
+\renewcommand{\lblCrewRank}{rank}
+\renewcommand{\lblCaptainComments}{CAPTAIN'S COMMENTS}
+\renewcommand{\lblOwnerComments}{OWNER'S COMMENTS}
+\renewcommand{\lblPlaceDate}{place and date}
+\renewcommand{\lblCaptainSign}{captain's signature}
+\renewcommand{\lblOwnerSign}{owner's signature}
+\renewcommand{\lblFootnote}{* if concerns}
+\kartapage
+
+\end{Form}
+\end{document}
