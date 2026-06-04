@@ -102,7 +102,10 @@ class PassageCard(FormDocument):
             side = "L" if i < 6 else "R"
             row = i % 6 + 1
             prefix = f"crew{side}_{row}_"
-            put(f, prefix + "lp", member.lp if member.lp is not None else i + 1)
+            lp = member.lp
+            if lp is None or str(lp).strip() == "":
+                lp = i + 1  # auto-number when omitted/blank
+            put(f, prefix + "lp", lp)
             put(f, prefix + "name", member.name)
             put(f, prefix + "cert", member.cert)
             put(f, prefix + "rank", member.rank)

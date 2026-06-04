@@ -31,7 +31,7 @@ import sys
 from pathlib import Path
 
 import fitz  # PyMuPDF
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from .models import DOCUMENTS, DocumentSpec, get_document
 
@@ -164,6 +164,32 @@ def list_fields(template: Path) -> list[str]:
     return names
 
 
+def _blank_for(annotation) -> object:
+    """Empty placeholder for a model field annotation (recurses one level)."""
+    import typing
+
+    origin = typing.get_origin(annotation)
+    args = [a for a in typing.get_args(annotation) if a is not type(None)]
+    if origin in (list, set, tuple):
+        inner = args[0] if args else str
+        if isinstance(inner, type) and issubclass(inner, BaseModel):
+            return [blank_template(inner)]  # one blank row showing the shape
+        return []
+    if isinstance(annotation, type) and issubclass(annotation, BaseModel):
+        return blank_template(annotation)
+    # Optional[...] / unions: peek at the first concrete arg
+    for a in args:
+        if isinstance(a, type) and issubclass(a, BaseModel):
+            return blank_template(a)
+    return ""
+
+
+def blank_template(model: type[BaseModel]) -> dict:
+    """A ``{key: ""}`` template for ``model`` (lists get one blank element)."""
+    return {name: _blank_for(field.annotation)
+            for name, field in model.model_fields.items()}
+
+
 def _print_documents() -> None:
     print("Available documents:\n")
     for spec in DOCUMENTS.values():
@@ -189,6 +215,8 @@ def main() -> None:
                     help="list the document's PDF field names and exit")
     ap.add_argument("--schema", action="store_true",
                     help="print the document's input JSON schema and exit")
+    ap.add_argument("--blank", action="store_true",
+                    help="print an empty JSON data template for the document and exit")
     args = ap.parse_args()
 
     if args.list_documents or (args.document is None and not args.data):
@@ -202,6 +230,10 @@ def main() -> None:
 
     if args.schema:
         print(json.dumps(spec.model.model_json_schema(), indent=2, ensure_ascii=False))
+        return
+
+    if args.blank:
+        print(json.dumps(blank_template(spec.model), indent=2, ensure_ascii=False))
         return
 
     if not spec.template_built:

@@ -89,6 +89,9 @@ uv run build-docs
 # See which documents can be filled
 uv run fill-doc --list
 
+# Generate an empty data template (keys, no values) for a document
+uv run fill-doc passage-card --blank > data/passage_card.json
+
 # Fill from JSON and flatten (default)
 uv run fill-doc passage-card examples/passage_card.json -o tmp/karta.pdf
 
