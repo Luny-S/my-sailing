@@ -99,10 +99,11 @@ table.opinion { width: 100%; border-collapse: collapse; margin-top: 2px; margin-
 table.opinion td { border: none; padding: 3px 8px; vertical-align: middle; }
 table.opinion .subhead td { font-weight: bold; padding-top: 8px; padding-bottom: 1px; }
 table.opinion .op-hdr { font-weight: bold; }
+.cbwrap { display: flex; align-items: center; gap: 4px; }
 .cb {
-  display: inline-block; width: 9pt; height: 9pt; border: 0.5pt solid #000;
-  margin-right: 4px; vertical-align: -1px; text-align: center;
-  line-height: 8.5pt; font-size: 8pt;
+  display: inline-block; flex: 0 0 auto;
+  width: 9pt; height: 9pt; border: 0.5pt solid #000;
+  text-align: center; line-height: 8.5pt; font-size: 8pt;
 }
 .cb.on::after { content: "\2715"; }   /* ✕ */
 

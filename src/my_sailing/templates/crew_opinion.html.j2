@@ -67,7 +67,7 @@
 {%- endmacro -%}
 
 {%- macro cb(on, label) -%}
-<span class="cb {{ 'on' if on }}"></span>{{ label }}
+<span class="cbwrap"><span class="cb {{ 'on' if on }}"></span>{{ label }}</span>
 {%- endmacro -%}
 
 {%- macro page(lang, L, m) -%}
