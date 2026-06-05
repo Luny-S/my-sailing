@@ -4,13 +4,16 @@ version = "0.1.0"
 description = "Sailing document template builder (PZZ / general)"
 requires-python = ">=3.13"
 dependencies = [
+    "jinja2>=3.1.6",
     "pydantic>=2.13.4",
     "pymupdf>=1.27.2.3",
+    "weasyprint>=69.0",
 ]
 
 [project.scripts]
 build-docs = "my_sailing.build:main"
 fill-doc = "my_sailing.fill:main"
+render-doc = "my_sailing.render:main"
 
 [build-system]
 requires = ["hatchling"]

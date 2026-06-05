@@ -74,7 +74,29 @@ docker run --rm -v "$(pwd)/build:/app/build" my-sailing
 
 ---
 
-## Pre-filling forms (karta rejsu)
+## Print-ready, pre-filled PDFs (HTML/CSS + WeasyPrint) — recommended
+
+The forms are rendered from Jinja2 HTML templates ([src/my_sailing/templates/](src/my_sailing/templates/))
+bound to the [pydantic models](src/my_sailing/models/), via WeasyPrint. This is
+the print path: data → A4 PDF, with CSS handling field wrapping (long values no
+longer overflow), Polish/English pages, and per-crew-member fan-out.
+
+```bash
+uv run render-doc --list
+uv run render-doc passage-card examples/passage_card.json -o tmp/passage.pdf
+uv run render-doc crew-opinion examples/crew_opinion.json -o tmp/opinions.pdf  # one form per crew member
+uv run render-doc passage-card examples/passage_card.json -o tmp/p.html --html  # inspect the HTML
+```
+
+`crew-opinion` is issued **per crew member**: shared cruise data + a `crew` list →
+one 2-page form per member, concatenated into a single PDF.
+
+> WeasyPrint needs a few system libs: `libpango-1.0-0 libpangocairo-1.0-0
+> libcairo2 libgdk-pixbuf-2.0-0 fonts-dejavu-core`.
+
+---
+
+## Pre-filling forms (legacy LaTeX/AcroForm path)
 
 `passage-card` is a fillable PDF form (real AcroForm fields). You can pre-fill it
 from a JSON file and get a flattened, ready-to-print PDF. The JSON is validated

@@ -17,15 +17,21 @@
       needed) → move to **HTML + CSS + WeasyPrint**. Feasibility confirmed:
       WeasyPrint renders A4 with full Polish diacritics + bordered tables in
       this container (system libs: libpango/cairo/gdk-pixbuf, fonts-dejavu).
-- [ ] **Rewrite the forms in HTML/CSS + WeasyPrint** (print-only, pre-filled):
-      - Jinja2 templates bind the existing pydantic models directly (no flat
-        AcroForm field-name mapping); render PL + EN pages, loop crew for
-        crew-opinion (one form per member).
-      - CSS solves the LaTeX pain points: field auto-fit/wrapping (no overflow),
-        easier alignment, `@page { size: A4 }` for print.
-      - Add weasyprint + jinja2 deps; a render module + CLI (replace/augment
-        `fill-doc`); reuse documents/shared/assets/pzz-logo.png.
-      - Port passage-card first (spike), then crew-opinion; retire the LaTeX
-        forms once parity is reached.
+- [x] **Rewrite the forms in HTML/CSS + WeasyPrint** (print-only, pre-filled):
+      `render-doc <doc> data.json -o out.pdf`. Jinja2 templates
+      (src/my_sailing/templates/) bound to the pydantic models; PL+EN pages,
+      crew-opinion fans out to one form per member; checkboxes for the opinion
+      assessment; CSS field-wrapping fixes the overflow; `@page A4`.
+      passage-card (2pp) and crew-opinion (2pp/member) both at parity.
+
+## Follow-ups
+
+- [ ] Retire the LaTeX path once happy with HTML (remove documents/*.tex form
+      sources, fill.py / fill-doc, and the LaTeX-only deps) — kept for now so
+      the two can be compared side by side.
+- [ ] Polish HTML output: signature underlines length, exact header letter-
+      spacing vs the official PDF, long-email wrapping.
+- [ ] Make the remaining skeleton docs (safety-briefing, shopping/packing-list,
+      yacht-log, yacht-check-in) into HTML templates + models if wanted.
 - [ ] Make the other skeleton docs (safety-briefing, shopping-list, packing-list,
       yacht-log, yacht-check-in) into real fillable forms + models, if wanted.

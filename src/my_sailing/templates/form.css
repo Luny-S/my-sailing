@@ -1,0 +1,110 @@
+/* Shared styling for the PZŻ print forms (HTML/CSS + WeasyPrint). */
+
+@page { size: A4; margin: 1.15cm 1.4cm; }
+
+* { box-sizing: border-box; }
+html {
+  font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  font-size: 9pt;
+  color: #000;
+  line-height: 1.22;
+}
+body { margin: 0; }
+
+/* Each sheet is exactly one A4 content page; footnotes sit at the bottom. */
+.sheet {
+  display: flex; flex-direction: column;
+  height: 27.2cm; overflow: hidden;
+  page-break-after: always;
+}
+.sheet:last-child { page-break-after: auto; }
+
+/* ---------------- Header ---------------- */
+.header { display: flex; height: 1.65cm; margin-bottom: 5px; }
+.header .logo { height: 100%; display: block; }
+.header .titlebox {
+  flex: 1; margin-left: 5px; border: 1pt solid #000;
+  display: flex; flex-direction: column;
+}
+.titlebox .assoc {
+  text-align: center; font-weight: bold; letter-spacing: 0.42em;
+  padding: 2px 0 2px 0.42em; border-bottom: 1pt solid #000; font-size: 10pt;
+}
+.titlebox .title {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  font-weight: bold; letter-spacing: 0.16em; font-size: 17pt;
+  white-space: nowrap; padding-left: 0.16em;
+}
+.titlebox .title.long { font-size: 13.5pt; letter-spacing: 0.1em; }
+
+/* ---------------- Section heading ---------------- */
+.sec { font-weight: bold; margin: 3px 0 1px; }
+
+/* ---------------- Label + field rows (flex) ---------------- */
+.row { display: flex; gap: 0.9em; margin: 1px 0; align-items: flex-end; }
+.fld { display: flex; flex: 1; align-items: baseline; gap: 0.3em; min-width: 0; }
+.fld.fixed { flex: 0 0 auto; }
+.lbl { white-space: nowrap; }
+.val {
+  flex: 1; border-bottom: 0.6pt solid #888; min-height: 1.18em;
+  padding: 0 2px; min-width: 0; overflow-wrap: anywhere;
+}
+.unit { white-space: nowrap; }
+
+/* ---------------- Tables ---------------- */
+table.grid { width: 100%; border-collapse: collapse; margin-top: 2px; }
+table.grid td, table.grid th {
+  border: 0.5pt solid #000; padding: 2px 4px; vertical-align: middle;
+  font-weight: normal;
+}
+table.grid th { font-style: italic; text-align: center; }
+.center { text-align: center; }
+.tidal { white-space: nowrap; }
+.tidal b { letter-spacing: 0.02em; }
+
+/* cell that should look like a fill-in box of a given min height */
+.box td { height: 1.25em; }
+.box.tall td { height: 2.9em; vertical-align: top; }
+
+/* Hours table headers */
+table.hours th { font-style: normal; font-weight: normal; }
+table.hours .grouphdr { font-size: 9pt; }
+table.hours .subhdr { font-size: 7.6pt; }
+table.hours .data td { height: 1.8em; }
+
+/* Crew tables */
+.crewwrap { display: flex; gap: 0.5cm; }
+.crewwrap > div { flex: 1; }
+table.crew th { font-size: 7.8pt; }
+table.crew td { height: 1.45em; }
+table.crew .lp { width: 0.5cm; text-align: center; }
+table.crew .c-cert { width: 1.6cm; }
+table.crew .c-rank { width: 1.5cm; }
+
+/* ---------------- Checkboxes (opinion) ---------------- */
+table.opinion td { border: 0.5pt solid #000; padding: 3px 5px; }
+table.opinion .subhead td { font-weight: bold; }
+.cb {
+  display: inline-block; width: 9pt; height: 9pt; border: 0.5pt solid #000;
+  margin-right: 4px; vertical-align: -1px; text-align: center;
+  line-height: 8.5pt; font-size: 8pt;
+}
+.cb.on::after { content: "\2715"; }   /* ✕ */
+
+/* ---------------- Multiline comment box ---------------- */
+.notes {
+  border-bottom: 0.6pt solid #888; min-height: 3.0em; padding: 1px 2px;
+  overflow-wrap: anywhere; white-space: pre-wrap;
+}
+.notes.short { min-height: 2.4em; }
+
+/* ---------------- Signatures ---------------- */
+.sign { display: flex; gap: 2cm; margin-top: 6px; }
+.sign .col { flex: 1; text-align: center; }
+.sign .val { text-align: center; }
+.sign .cap { font-style: italic; font-size: 8.5pt; margin-top: -1px; }
+
+/* ---------------- Footnotes ---------------- */
+.spacer { flex: 1 1 auto; }
+.foot { font-style: italic; font-size: 8pt; margin-top: 5px; }
+.foot .rule { border-top: 0.4pt solid #000; width: 6cm; margin-bottom: 2px; }

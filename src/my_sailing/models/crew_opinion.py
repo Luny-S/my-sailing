@@ -135,6 +135,11 @@ class CrewOpinion(FormDocument):
         put_lang(f, "remarks_captain", member.remarks)
         return f
 
+    def print_members(self) -> list[CrewOpinionMember | None]:
+        """Members to print one form each (a single blank form if none)."""
+        real = [m for m in self.crew if m.has_content()]
+        return real or [None]
+
     def to_copies(self) -> list[dict[str, object]]:
         members = [m for m in self.crew if m.has_content()]
         if not members:

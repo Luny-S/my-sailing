@@ -31,12 +31,13 @@ __all__ = [
 
 @dataclass(frozen=True)
 class DocumentSpec:
-    """A fillable document: its model and its compiled template PDF."""
+    """A document: its model, the HTML/CSS template, and the legacy LaTeX PDF."""
 
     name: str
     title: str
     model: type[FormDocument]
-    template: Path
+    html_template: str               # Jinja2 template under my_sailing/templates/
+    template: Path                   # legacy LaTeX AcroForm PDF (for fill-doc)
 
     @property
     def template_built(self) -> bool:
@@ -48,12 +49,14 @@ DOCUMENTS: dict[str, DocumentSpec] = {
         name="passage-card",
         title="Karta rejsu / Captain's certificate of passage",
         model=PassageCard,
+        html_template="passage_card.html.j2",
         template=BUILD_DIR / "documents" / "passage-card" / "passage_card.pdf",
     ),
     "crew-opinion": DocumentSpec(
         name="crew-opinion",
         title="Opinia z rejsu / Crew member's certificate of passage (one per member)",
         model=CrewOpinion,
+        html_template="crew_opinion.html.j2",
         template=BUILD_DIR / "documents" / "crew-opinion" / "crew_opinion.pdf",
     ),
 }

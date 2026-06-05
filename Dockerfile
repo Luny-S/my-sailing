@@ -9,6 +9,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive-latex-extra \
     texlive-fonts-recommended \
     texlive-lang-polish \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libcairo2 \
+    libgdk-pixbuf-2.0-0 \
+    fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -18,5 +23,6 @@ RUN uv sync --no-dev
 
 COPY src/ src/
 COPY documents/ documents/
+COPY examples/ examples/
 
 ENTRYPOINT ["uv", "run", "build-docs"]

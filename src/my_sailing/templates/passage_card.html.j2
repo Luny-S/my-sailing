@@ -1,0 +1,167 @@
+{#- Karta rejsu / Captain's certificate of passage — print-only (PL + EN) -#}
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+
+{%- set PL = {
+  "assoc": "POLSKI ZWIĄZEK ŻEGLARSKI", "title": "KARTA REJSU", "long": false,
+  "capsec": "INFORMACJE O KAPITANIE", "name": "Imię i nazwisko:",
+  "cert": "stop. żegl./mot. i nr pat.:", "phone": "tel.:", "email": "adres e-mail:",
+  "yachtsec": "INFORMACJE O JACHCIE", "reg": "Nr rej.:", "yname": "nazwa jachtu:",
+  "loa": "Lc=", "homeport": "port macierzysty:", "engine": "moc silnika:",
+  "cruisesec": "INFORMACJE O REJSIE",
+  "basedon": "Wpisu dokonano na podstawie dziennika jachtowego*, nr pływania",
+  "embark": "Port zaokrętowania:", "disembark": "Port wyokrętowania:",
+  "date": "Data:", "tidal": "Pływowy:", "yesno": "TAK / NIE",
+  "visited": "Odwiedzone porty:", "tidalcount": "W tym liczba portów pływowych:",
+  "days": "Liczba dni rejsu:",
+  "hours": "GODZINY ŻEGLUGI", "mooring": "GODZINY POSTOJU", "trip": "PRZEBYTO MIL MORSKICH",
+  "total": "razem (pod żaglami i na silniku)", "undersail": "pod żaglami",
+  "engineh": "na silniku", "ontidal": "po wodach pływowych",
+  "inharb": "w portach i na kotwicy",
+  "crewsec": "INFORMACJE O ZAŁODZE", "lp": "Lp.", "crewname": "Imię i nazwisko",
+  "crewcert": "stopień żegl./mot.", "crewrank": "funkcja na jachcie",
+  "capcomm": "UWAGI KAPITANA", "owncomm": "UWAGI ARMATORA/WŁAŚCICIELA JACHTU",
+  "placedate": "miejscowość, data", "capsign": "podpis kapitana",
+  "ownsign": "podpis armatora/właściciela jachtu", "foot": "* jeżeli był prowadzony"
+} -%}
+{%- set EN = {
+  "assoc": "POLISH YACHTING ASSOCIATION", "title": "CAPTAIN'S CERTIFICATE OF PASSAGE", "long": true,
+  "capsec": "INFORMATION ABOUT CAPTAIN", "name": "Name & surname:",
+  "cert": "cert. of sailing/motor competency, No.:", "phone": "phone:", "email": "email:",
+  "yachtsec": "YACHT'S INFORMATION", "reg": "Reg. No.:", "yname": "name of yacht:",
+  "loa": "LOA:", "homeport": "home port:", "engine": "Engine power:",
+  "cruisesec": "CRUISE INFORMATION", "basedon": "Based on Vessel Log Book*, voyage No:",
+  "embark": "Port of embarkation:", "disembark": "Port of disembarkation:",
+  "date": "Date:", "tidal": "Tidal port:", "yesno": "YES / NO",
+  "visited": "Visited ports:", "tidalcount": "Number of tidal ports:",
+  "days": "Number of cruise days:",
+  "hours": "NUMBER OF HOURS UNDERWAY", "mooring": "NUMBER OF MOORING HOURS", "trip": "TRIP NM",
+  "total": "total (sails & engine)", "undersail": "under sails",
+  "engineh": "using engine", "ontidal": "on tidal waters",
+  "inharb": "in harbours, on anchor",
+  "crewsec": "INFORMATION ABOUT CREW", "lp": "No.", "crewname": "Name & surname",
+  "crewcert": "certificate", "crewrank": "rank",
+  "capcomm": "CAPTAIN'S COMMENTS", "owncomm": "OWNER'S COMMENTS",
+  "placedate": "place and date", "capsign": "captain's signature",
+  "ownsign": "owner's signature", "foot": "* if concerns"
+} -%}
+
+{%- macro crewtable(lang, L, start) -%}
+<table class="grid crew">
+  <tr><th class="lp">{{ L.lp }}</th><th>{{ L.crewname }}</th>
+      <th class="c-cert">{{ L.crewcert }}</th><th class="c-rank">{{ L.crewrank }}</th></tr>
+  {% for i in range(start, start + 6) %}
+  {% set m = d.crew[i] if i < d.crew|length else none %}
+  {% set filled = m and (m.name or m.cert or m.rank) %}
+  <tr>
+    <td class="lp">{{ loop.index0 + start + 1 if filled else "" }}</td>
+    <td>{{ (m.name or "") if m else "" }}</td>
+    <td class="center">{{ bi(m.cert, lang) if m else "" }}</td>
+    <td class="center">{{ bi(m.rank, lang) if m else "" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{%- endmacro -%}
+
+{%- macro page(lang, L) -%}
+<div class="sheet">
+
+  <div class="header">
+    <img class="logo" src="{{ logo }}">
+    <div class="titlebox">
+      <div class="assoc">{{ L.assoc }}</div>
+      <div class="title {{ 'long' if L.long }}">{{ L.title }}</div>
+    </div>
+  </div>
+
+  <div class="sec">{{ L.capsec }}</div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.name }}</span><span class="val">{{ d.captain_name or "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.cert }}</span><span class="val">{{ bi(d.captain_cert, lang) }}</span></div>
+  </div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.phone }}</span><span class="val">{{ d.captain_phone or "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.email }}</span><span class="val">{{ d.captain_email or "" }}</span></div>
+  </div>
+
+  <div class="sec">{{ L.yachtsec }}</div>
+  <div class="row">
+    <div class="fld fixed"><span class="lbl">{{ L.reg }}</span><span class="val" style="width:2.4cm">{{ d.yacht_reg or "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.yname }}</span><span class="val">{{ d.yacht_name or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">{{ L.loa }}</span><span class="val" style="width:2cm">{{ d.yacht_loa or "" }}</span><span class="unit">[m]</span></div>
+  </div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.homeport }}</span><span class="val">{{ d.yacht_homeport or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">{{ L.engine }}</span><span class="val" style="width:2cm">{{ d.yacht_engine or "" }}</span><span class="unit">[kW]</span></div>
+  </div>
+
+  <div class="sec">{{ L.cruisesec }}</div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.basedon }}</span><span class="val">{{ d.logbook_no or "" }}</span></div>
+  </div>
+  <table class="grid">
+    <tr>
+      <td>{{ L.embark }} {{ d.port_embark or "" }}</td>
+      <td style="width:3cm">{{ L.date }} {{ d.date_embark or "" }}</td>
+      <td class="tidal" style="width:4cm">{{ L.tidal }} <b>{{ L.yesno }}</b></td>
+    </tr>
+    <tr>
+      <td>{{ L.disembark }} {{ d.port_disembark or "" }}</td>
+      <td>{{ L.date }} {{ d.date_disembark or "" }}</td>
+      <td class="tidal">{{ L.tidal }} <b>{{ L.yesno }}</b></td>
+    </tr>
+    <tr><td colspan="3">{{ L.visited }}</td></tr>
+    <tr class="box tall"><td colspan="3">{{ d.visited_ports or "" }}</td></tr>
+    <tr>
+      <td>{{ L.tidalcount }} {{ d.tidal_ports_count or "" }}</td>
+      <td colspan="2">{{ L.days }} {{ d.cruise_days or "" }}</td>
+    </tr>
+  </table>
+
+  <table class="grid hours">
+    <tr>
+      <th class="grouphdr" colspan="4">{{ L.hours }}</th>
+      <th class="grouphdr">{{ L.mooring }}</th>
+      <th class="grouphdr" rowspan="2" style="width:2.4cm">{{ L.trip }}</th>
+    </tr>
+    <tr>
+      <th class="subhdr">{{ L.total }}</th><th class="subhdr">{{ L.undersail }}</th>
+      <th class="subhdr">{{ L.engineh }}</th><th class="subhdr">{{ L.ontidal }}</th>
+      <th class="subhdr">{{ L.inharb }}</th>
+    </tr>
+    <tr class="data center">
+      <td>{{ d.hours_total or "" }}</td><td>{{ d.hours_sails or "" }}</td>
+      <td>{{ d.hours_engine or "" }}</td><td>{{ d.hours_tidal or "" }}</td>
+      <td>{{ d.hours_mooring or "" }}</td><td>{{ d.trip_nm or "" }}</td>
+    </tr>
+  </table>
+
+  <div class="sec">{{ L.crewsec }}</div>
+  <div class="crewwrap">
+    <div>{{ crewtable(lang, L, 0) }}</div>
+    <div>{{ crewtable(lang, L, 6) }}</div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="sec">{{ L.capcomm }}</div>
+  <div class="notes">{{ bi(d.remarks_captain, lang) }}</div>
+  <div class="sign">
+    <div class="col"><div class="val">{{ d.captain_place_date or "" }}</div><div class="cap">{{ L.placedate }}</div></div>
+    <div class="col"><div class="val">&nbsp;</div><div class="cap">{{ L.capsign }}</div></div>
+  </div>
+
+  <div class="sec">{{ L.owncomm }}</div>
+  <div class="notes">{{ bi(d.remarks_owner, lang) }}</div>
+  <div class="sign">
+    <div class="col"><div class="val">{{ d.owner_place_date or "" }}</div><div class="cap">{{ L.placedate }}</div></div>
+    <div class="col"><div class="val">&nbsp;</div><div class="cap">{{ L.ownsign }}</div></div>
+  </div>
+
+  <div class="foot"><div class="rule"></div>{{ L.foot }}</div>
+</div>
+{%- endmacro -%}
+
+{{ page("pl", PL) }}
+{{ page("en", EN) }}
+
+</body></html>

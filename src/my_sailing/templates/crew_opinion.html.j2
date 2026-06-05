@@ -1,0 +1,195 @@
+{#- Opinia z rejsu / Crew member's certificate of passage — one form per member -#}
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+
+{%- set PL = {
+  "assoc": "POLSKI ZWIĄZEK ŻEGLARSKI", "title": "OPINIA Z REJSU", "long": false,
+  "partsec": "INFORMACJE O UCZESTNIKU REJSU", "name": "Imię i nazwisko:",
+  "cert": "stop. żegl./mot. i nr pat.:", "phone": "tel.:", "email": "adres e-mail:",
+  "rank": "funkcja:",
+  "yachtsec": "INFORMACJE O JACHCIE", "reg": "Nr rej.:", "yname": "nazwa jachtu:",
+  "loa": "Lc=", "homeport": "port macierzysty:", "engine": "moc silnika:",
+  "cruisesec": "INFORMACJE O REJSIE",
+  "basedon": "Wpisu dokonano na podstawie dziennika jachtowego*, nr pływania",
+  "embark": "Port zaokrętowania:", "disembark": "Port wyokrętowania:",
+  "date": "Data:", "tidal": "Pływowy:", "yesno": "TAK / NIE",
+  "visited": "Odwiedzone porty:", "tidalcount": "W tym liczba portów pływowych:",
+  "days": "Liczba dni rejsu:",
+  "hours": "GODZINY ŻEGLUGI", "mooring": "GODZINY POSTOJU", "trip": "PRZEBYTO MIL MORSKICH",
+  "total": "razem (pod żaglami i na silniku)", "undersail": "pod żaglami",
+  "engineh": "na silniku", "ontidal": "po wodach pływowych",
+  "inharb": "w portach i na kotwicy",
+  "opinionsec": "OPINIA KAPITANA**", "oppos": "pozytywna", "opneg": "negatywna",
+  "dutiessec": "Z obowiązków wywiązywał/a się:",
+  "dut_vg": "bardzo dobrze", "dut_g": "dobrze", "dut_s": "dostatecznie", "dut_u": "niedostatecznie",
+  "sicksec": "Chorobie morskiej:",
+  "sick_no": "nie podlegał/a", "sick_heavy": "chorował/a ciężko",
+  "sick_work": "chorował/a lecz mógł/mogła pracować",
+  "endursec": "Odporność w trudnych warunkach:",
+  "end_g": "dobra", "end_s": "dostateczna", "end_u": "niedostateczna", "end_nt": "nie sprawdzano",
+  "commsec": "UWAGI KAPITANA", "capinfosec": "INFORMACJE O KAPITANIE",
+  "placedate": "miejscowość, data", "capsign": "podpis kapitana",
+  "foot": "* jeżeli był prowadzony",
+  "foot2": "** wymagana na podstawie § 4 pkt 3 Rozporządzenia MSiT z dnia 9 kwietnia 2013 r. w sprawie uprawiania turystyki wodnej"
+} -%}
+{%- set EN = {
+  "assoc": "POLISH YACHTING ASSOCIATION", "title": "CREW MEMBER'S CERTIFICATE OF PASSAGE", "long": true,
+  "partsec": "PERSONAL INFORMATION", "name": "Name & surname:",
+  "cert": "cert. of sailing/motor competency, No.:", "phone": "phone:", "email": "email:",
+  "rank": "rank:",
+  "yachtsec": "YACHT'S INFORMATION", "reg": "Reg. No.:", "yname": "name of yacht:",
+  "loa": "LOA:", "homeport": "home port:", "engine": "Engine power:",
+  "cruisesec": "CRUISE INFORMATION", "basedon": "Based on Vessel Log Book*, voyage No:",
+  "embark": "Port of embarkation:", "disembark": "Port of disembarkation:",
+  "date": "Date:", "tidal": "Tidal port:", "yesno": "YES / NO",
+  "visited": "Visited ports:", "tidalcount": "Number of tidal ports:",
+  "days": "Number of cruise days:",
+  "hours": "NUMBER OF HOURS UNDERWAY", "mooring": "NUMBER OF MOORING HOURS", "trip": "TRIP NM",
+  "total": "total (sails & engine)", "undersail": "under sails",
+  "engineh": "using engine", "ontidal": "on tidal waters",
+  "inharb": "in harbours, on anchor",
+  "opinionsec": "CAPTAIN'S OPINION **", "oppos": "positive", "opneg": "negative",
+  "dutiessec": "Duties fulfilment:",
+  "dut_vg": "very good", "dut_g": "good", "dut_s": "satisfactory", "dut_u": "unsatisfactory",
+  "sicksec": "Sea sickness:",
+  "sick_no": "no", "sick_heavy": "yes", "sick_work": "yes, but could work",
+  "endursec": "Endurance in difficult conditions:",
+  "end_g": "good", "end_s": "satisfactory", "end_u": "unsatisfactory", "end_nt": "not experienced",
+  "commsec": "CAPTAIN'S COMMENTS", "capinfosec": "INFORMATION ABOUT CAPTAIN",
+  "placedate": "place and date", "capsign": "captain's signature",
+  "foot": "* if concerns",
+  "foot2": "** Required by Polish regulations on water tourism /Dz.U. 2013 nr 0 poz. 460, § 4 pkt 3/"
+} -%}
+
+{%- macro cb(on, label) -%}
+<span class="cb {{ 'on' if on }}"></span>{{ label }}
+{%- endmacro -%}
+
+{%- macro page(lang, L, m) -%}
+<div class="sheet">
+
+  <div class="header">
+    <img class="logo" src="{{ logo }}">
+    <div class="titlebox">
+      <div class="assoc">{{ L.assoc }}</div>
+      <div class="title {{ 'long' if L.long }}">{{ L.title }}</div>
+    </div>
+  </div>
+
+  <div class="sec">{{ L.partsec }}</div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.name }}</span><span class="val">{{ (m.name or "") if m else "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.cert }}</span><span class="val">{{ bi(m.cert, lang) if m else "" }}</span></div>
+  </div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.phone }}</span><span class="val">{{ (m.phone or "") if m else "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.email }}</span><span class="val">{{ (m.email or "") if m else "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.rank }}</span><span class="val">{{ bi(m.rank, lang) if m else "" }}</span></div>
+  </div>
+
+  <div class="sec">{{ L.yachtsec }}</div>
+  <div class="row">
+    <div class="fld fixed"><span class="lbl">{{ L.reg }}</span><span class="val" style="width:2.4cm">{{ d.yacht_reg or "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.yname }}</span><span class="val">{{ d.yacht_name or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">{{ L.loa }}</span><span class="val" style="width:2cm">{{ d.yacht_loa or "" }}</span><span class="unit">[m]</span></div>
+  </div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.homeport }}</span><span class="val">{{ d.yacht_homeport or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">{{ L.engine }}</span><span class="val" style="width:2cm">{{ d.yacht_engine or "" }}</span><span class="unit">[kW]</span></div>
+  </div>
+
+  <div class="sec">{{ L.cruisesec }}</div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.basedon }}</span><span class="val">{{ d.logbook_no or "" }}</span></div>
+  </div>
+  <table class="grid">
+    <tr>
+      <td>{{ L.embark }} {{ d.port_embark or "" }}</td>
+      <td style="width:3cm">{{ L.date }} {{ d.date_embark or "" }}</td>
+      <td class="tidal" style="width:4cm">{{ L.tidal }} <b>{{ L.yesno }}</b></td>
+    </tr>
+    <tr>
+      <td>{{ L.disembark }} {{ d.port_disembark or "" }}</td>
+      <td>{{ L.date }} {{ d.date_disembark or "" }}</td>
+      <td class="tidal">{{ L.tidal }} <b>{{ L.yesno }}</b></td>
+    </tr>
+    <tr><td colspan="3">{{ L.visited }}</td></tr>
+    <tr class="box tall"><td colspan="3">{{ d.visited_ports or "" }}</td></tr>
+    <tr>
+      <td>{{ L.tidalcount }} {{ d.tidal_ports_count or "" }}</td>
+      <td colspan="2">{{ L.days }} {{ d.cruise_days or "" }}</td>
+    </tr>
+  </table>
+
+  <table class="grid hours">
+    <tr>
+      <th class="grouphdr" colspan="4">{{ L.hours }}</th>
+      <th class="grouphdr">{{ L.mooring }}</th>
+      <th class="grouphdr" rowspan="2" style="width:2.4cm">{{ L.trip }}</th>
+    </tr>
+    <tr>
+      <th class="subhdr">{{ L.total }}</th><th class="subhdr">{{ L.undersail }}</th>
+      <th class="subhdr">{{ L.engineh }}</th><th class="subhdr">{{ L.ontidal }}</th>
+      <th class="subhdr">{{ L.inharb }}</th>
+    </tr>
+    <tr class="data center">
+      <td>{{ d.hours_total or "" }}</td><td>{{ d.hours_sails or "" }}</td>
+      <td>{{ d.hours_engine or "" }}</td><td>{{ d.hours_tidal or "" }}</td>
+      <td>{{ d.hours_mooring or "" }}</td><td>{{ d.trip_nm or "" }}</td>
+    </tr>
+  </table>
+
+  <table class="grid opinion">
+    <tr>
+      <td style="width:33%"><b>{{ L.opinionsec }}</b></td>
+      <td style="width:33%"><b>{{ cb(m and m.opinion == "positive", L.oppos) }}</b></td>
+      <td><b>{{ cb(m and m.opinion == "negative", L.opneg) }}</b></td>
+    </tr>
+    <tr class="subhead"><td colspan="3">{{ L.dutiessec }}</td></tr>
+    <tr>
+      <td>{{ cb(m and m.duties == "very_good", L.dut_vg) }}</td>
+      <td>{{ cb(m and m.duties == "good", L.dut_g) }}</td>
+      <td>{{ cb(m and m.duties == "satisfactory", L.dut_s) }} &nbsp;&nbsp; {{ cb(m and m.duties == "unsatisfactory", L.dut_u) }}</td>
+    </tr>
+    <tr class="subhead"><td colspan="3">{{ L.sicksec }}</td></tr>
+    <tr>
+      <td>{{ cb(m and m.seasickness == "none", L.sick_no) }}</td>
+      <td>{{ cb(m and m.seasickness == "heavy", L.sick_heavy) }}</td>
+      <td>{{ cb(m and m.seasickness == "could_work", L.sick_work) }}</td>
+    </tr>
+    <tr class="subhead"><td colspan="3">{{ L.endursec }}</td></tr>
+    <tr>
+      <td>{{ cb(m and m.endurance == "good", L.end_g) }}</td>
+      <td>{{ cb(m and m.endurance == "satisfactory", L.end_s) }}</td>
+      <td>{{ cb(m and m.endurance == "unsatisfactory", L.end_u) }} &nbsp;&nbsp; {{ cb(m and m.endurance == "not_tested", L.end_nt) }}</td>
+    </tr>
+  </table>
+
+  <div class="sec">{{ L.commsec }}</div>
+  <div class="notes short">{{ bi(m.remarks, lang) if m else "" }}</div>
+
+  <div class="spacer"></div>
+
+  <div class="sec">{{ L.capinfosec }}</div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.name }}</span><span class="val">{{ d.captain_name or "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.cert }}</span><span class="val">{{ bi(d.captain_cert, lang) }}</span></div>
+  </div>
+  <div class="row">
+    <div class="fld"><span class="lbl">{{ L.phone }}</span><span class="val">{{ d.captain_phone or "" }}</span></div>
+    <div class="fld"><span class="lbl">{{ L.email }}</span><span class="val">{{ d.captain_email or "" }}</span></div>
+  </div>
+  <div class="sign">
+    <div class="col"><div class="val">{{ d.captain_place_date or "" }}</div><div class="cap">{{ L.placedate }}</div></div>
+    <div class="col"><div class="val">&nbsp;</div><div class="cap">{{ L.capsign }}</div></div>
+  </div>
+
+  <div class="foot"><div class="rule"></div>{{ L.foot }}<br>{{ L.foot2 }}</div>
+</div>
+{%- endmacro -%}
+
+{% for m in d.print_members() %}
+{{ page("pl", PL, m) }}
+{{ page("en", EN, m) }}
+{% endfor %}
+
+</body></html>
