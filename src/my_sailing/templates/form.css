@@ -75,10 +75,12 @@ table.hours .subhdr { font-size: 7.6pt; }
 table.hours .data td { height: 1.8em; }
 
 /* Crew table — single 9-column table (4 data + gap + 4 data).
-   table-layout:fixed + <col> widths make both name columns identical width
-   regardless of content. The gap column has no border, visually splitting the
-   table into two halves that look like separate tables. */
-table.crew { width: 100%; table-layout: fixed; }
+   table-layout:fixed + <col> widths make both name columns identical width.
+   border-collapse:separate so the gap cell's border:none is truly independent
+   and doesn't eat its neighbours (collapse mode treats none as hidden and can
+   remove the adjacent cell's border in WeasyPrint). Double borders are removed
+   by stripping the top from non-first rows and the left from non-first cols. */
+table.crew { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; }
 table.crew col.col-lp   { width: 3%; }
 table.crew col.col-name { width: 29%; }
 table.crew col.col-cert { width: 9%; }
@@ -87,15 +89,16 @@ table.crew col.col-gap  { width: 0.4cm; }
 table.crew th { font-size: 7.8pt; }
 table.crew td { height: 1.45em; }
 table.crew .lp { text-align: center; }
-table.crew .c-cert { }
-table.crew .c-gap, table.crew th.c-gap {
-  border-top: none; border-bottom: none; border-left: none; border-right: none;
-  padding: 0; background: #fff;
-}
+table.crew tr + tr td, table.crew tr + tr th { border-top: none; }
+table.crew td + td, table.crew th + th { border-left: none; }
+table.crew .c-gap, table.crew th.c-gap { border: none; padding: 0; background: #fff; }
+table.crew .c-gap + td, table.crew .c-gap + th { border-left: 0.5pt solid #000; }
 
 /* ---------------- Checkboxes (opinion) ---------------- */
-table.opinion td { border: 0.5pt solid #000; padding: 3px 5px; }
-table.opinion .subhead td { font-weight: bold; }
+table.opinion { width: 100%; border-collapse: collapse; margin-top: 2px; margin-bottom: 5px; }
+table.opinion td { border: none; padding: 2px 5px; vertical-align: middle; }
+table.opinion .subhead td { font-weight: bold; border-top: 0.4pt solid #aaa; padding-top: 3px; }
+table.opinion .op-hdr { font-weight: bold; }
 .cb {
   display: inline-block; width: 9pt; height: 9pt; border: 0.5pt solid #000;
   margin-right: 4px; vertical-align: -1px; text-align: center;
@@ -121,3 +124,43 @@ table.opinion .subhead td { font-weight: bold; }
 .spacer { flex: 1 1 auto; }
 .foot { font-style: italic; font-size: 8pt; margin-top: 5px; }
 .foot .rule { border-top: 0.4pt solid #000; width: 6cm; margin-bottom: 2px; }
+
+/* ---------------- Checklists ---------------- */
+/* Items are plain <li> tags — add/remove lines freely in the templates. */
+ul.cl { list-style: none; padding: 0; margin: 0; }
+ul.cl li { margin: 0; line-height: 1.45; padding: 0; }
+ul.cl.two-col { columns: 2; column-gap: 1cm; }
+/* Section heading inside a checklist area */
+.cl-hdr { font-weight: bold; font-size: 8.5pt; border-bottom: 0.5pt solid #000; margin: 4px 0 1px; }
+
+/* horizontal rule between major content blocks */
+.hr { border: 0; border-top: 0.6pt solid #000; margin: 3px 0; }
+
+/* Compact numbered / bulleted procedure list */
+ol.proc { margin: 0; padding-left: 1.4em; }
+ol.proc li { margin: 0; line-height: 1.4; }
+ul.proc { list-style: disc; margin: 0; padding-left: 1.4em; }
+ul.proc li { margin: 0; line-height: 1.4; }
+
+/* ---------------- MAYDAY card ---------------- */
+.mayday-banner {
+  background: #cc0000; color: #fff; font-weight: bold;
+  text-align: center; padding: 5px 4px; letter-spacing: 0.12em;
+  font-size: 15pt; margin-bottom: 4px;
+}
+.mayday-sub {
+  text-align: center; font-size: 9pt; color: #cc0000;
+  font-weight: bold; letter-spacing: 0.08em; margin-bottom: 4px;
+}
+.mayday-block { border: 1pt solid #cc0000; padding: 4px 7px; margin-bottom: 5px; }
+.mayday-block .step { margin: 2px 0; line-height: 1.55; }
+.mayday-block .step .letter {
+  display: inline-block; width: 1.1em; font-weight: bold;
+  color: #cc0000; font-size: 10pt;
+}
+.mayday-block .step .mval {
+  display: inline-block; border-bottom: 0.6pt solid #000;
+  min-width: 7cm; padding: 0 2px;
+}
+.pan-block { border: 1pt solid #666; padding: 4px 7px; margin-bottom: 4px; }
+.pan-block .pan-hdr { font-weight: bold; color: #333; margin-bottom: 2px; }

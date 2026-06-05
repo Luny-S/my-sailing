@@ -144,29 +144,31 @@
     </tr>
   </table>
 
-  <table class="grid opinion">
+  <table class="opinion">
     <tr>
-      <td style="width:33%"><b>{{ L.opinionsec }}</b></td>
-      <td style="width:33%"><b>{{ cb(m and m.opinion == "positive", L.oppos) }}</b></td>
-      <td><b>{{ cb(m and m.opinion == "negative", L.opneg) }}</b></td>
+      <td class="op-hdr" colspan="2"><b>{{ L.opinionsec }}</b></td>
+      <td>{{ cb(m and m.opinion == "positive", L.oppos) }}</td>
+      <td>{{ cb(m and m.opinion == "negative", L.opneg) }}</td>
     </tr>
-    <tr class="subhead"><td colspan="3">{{ L.dutiessec }}</td></tr>
+    <tr class="subhead"><td colspan="4">{{ L.dutiessec }}</td></tr>
     <tr>
       <td>{{ cb(m and m.duties == "very_good", L.dut_vg) }}</td>
       <td>{{ cb(m and m.duties == "good", L.dut_g) }}</td>
-      <td>{{ cb(m and m.duties == "satisfactory", L.dut_s) }} &nbsp;&nbsp; {{ cb(m and m.duties == "unsatisfactory", L.dut_u) }}</td>
+      <td>{{ cb(m and m.duties == "satisfactory", L.dut_s) }}</td>
+      <td>{{ cb(m and m.duties == "unsatisfactory", L.dut_u) }}</td>
     </tr>
-    <tr class="subhead"><td colspan="3">{{ L.sicksec }}</td></tr>
+    <tr class="subhead"><td colspan="4">{{ L.sicksec }}</td></tr>
     <tr>
       <td>{{ cb(m and m.seasickness == "none", L.sick_no) }}</td>
+      <td colspan="2">{{ cb(m and m.seasickness == "could_work", L.sick_work) }}</td>
       <td>{{ cb(m and m.seasickness == "heavy", L.sick_heavy) }}</td>
-      <td>{{ cb(m and m.seasickness == "could_work", L.sick_work) }}</td>
     </tr>
-    <tr class="subhead"><td colspan="3">{{ L.endursec }}</td></tr>
+    <tr class="subhead"><td colspan="4">{{ L.endursec }}</td></tr>
     <tr>
       <td>{{ cb(m and m.endurance == "good", L.end_g) }}</td>
       <td>{{ cb(m and m.endurance == "satisfactory", L.end_s) }}</td>
-      <td>{{ cb(m and m.endurance == "unsatisfactory", L.end_u) }} &nbsp;&nbsp; {{ cb(m and m.endurance == "not_tested", L.end_nt) }}</td>
+      <td>{{ cb(m and m.endurance == "unsatisfactory", L.end_u) }}</td>
+      <td>{{ cb(m and m.endurance == "not_tested", L.end_nt) }}</td>
     </tr>
   </table>
 
