@@ -45,6 +45,13 @@
   "ownsign": "owner's signature", "foot": "* if concerns"
 } -%}
 
+{#- Render text as writing lines; always shows at least `n` blank lines -#}
+{%- macro notes(text, n=2) -%}
+{%- set lines = (text or "").split("\n") if text else [] -%}
+{%- for line in lines %}<div class="noteline">{{ line or " " }}</div>{% endfor -%}
+{%- for _ in range([n - lines|length, 0]|max) %}<div class="noteline">&nbsp;</div>{% endfor -%}
+{%- endmacro -%}
+
 {%- macro crewtable(lang, L, start) -%}
 <table class="grid crew">
   <tr><th class="lp">{{ L.lp }}</th><th>{{ L.crewname }}</th>
@@ -144,14 +151,14 @@
   <div class="spacer"></div>
 
   <div class="sec">{{ L.capcomm }}</div>
-  <div class="notes">{{ bi(d.remarks_captain, lang) }}</div>
+  {{ notes(bi(d.remarks_captain, lang)) }}
   <div class="sign">
     <div class="col"><div class="val">{{ d.captain_place_date or "" }}</div><div class="cap">{{ L.placedate }}</div></div>
     <div class="col"><div class="val">&nbsp;</div><div class="cap">{{ L.capsign }}</div></div>
   </div>
 
   <div class="sec">{{ L.owncomm }}</div>
-  <div class="notes">{{ bi(d.remarks_owner, lang) }}</div>
+  {{ notes(bi(d.remarks_owner, lang)) }}
   <div class="sign">
     <div class="col"><div class="val">{{ d.owner_place_date or "" }}</div><div class="cap">{{ L.placedate }}</div></div>
     <div class="col"><div class="val">&nbsp;</div><div class="cap">{{ L.ownsign }}</div></div>

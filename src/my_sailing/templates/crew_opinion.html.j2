@@ -60,6 +60,12 @@
   "foot2": "** Required by Polish regulations on water tourism /Dz.U. 2013 nr 0 poz. 460, § 4 pkt 3/"
 } -%}
 
+{%- macro notes(text, n=2) -%}
+{%- set lines = (text or "").split("\n") if text else [] -%}
+{%- for line in lines %}<div class="noteline">{{ line or " " }}</div>{% endfor -%}
+{%- for _ in range([n - lines|length, 0]|max) %}<div class="noteline">&nbsp;</div>{% endfor -%}
+{%- endmacro -%}
+
 {%- macro cb(on, label) -%}
 <span class="cb {{ 'on' if on }}"></span>{{ label }}
 {%- endmacro -%}
@@ -165,7 +171,7 @@
   </table>
 
   <div class="sec">{{ L.commsec }}</div>
-  <div class="notes short">{{ bi(m.remarks, lang) if m else "" }}</div>
+  {{ notes(bi(m.remarks, lang) if m else "") }}
 
   <div class="spacer"></div>
 
