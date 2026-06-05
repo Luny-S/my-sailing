@@ -226,7 +226,8 @@ class VoyageRecord(BaseModel):
         return _clean({"yacht": self.yacht.name, "date": self._date()})
 
     def _crew_list_data(self) -> dict:
-        crew = [
+        captain_entry = _clean({"name": self.captain.name, "phone": self.captain.phone})
+        crew = [captain_entry] + [
             _clean({"name": m.name, "phone": m.phone})
             for m in self.crew
         ]
