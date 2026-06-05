@@ -20,8 +20,10 @@ body { margin: 0; }
 .sheet:last-child { page-break-after: auto; }
 
 /* ---------------- Header ---------------- */
-.header { display: flex; height: 1.65cm; margin-bottom: 5px; }
-.header .logo { height: 100%; display: block; }
+.header { display: flex; align-items: stretch; height: 1.65cm; margin-bottom: 5px; }
+/* explicit height + width:auto so the logo keeps its aspect ratio
+   (height:100% made WeasyPrint use the image's intrinsic width and stretch it) */
+.header .logo { height: 1.65cm; width: auto; flex: 0 0 auto; display: block; }
 .header .titlebox {
   flex: 1; margin-left: 5px; border: 1pt solid #000;
   display: flex; flex-direction: column;
@@ -72,9 +74,12 @@ table.hours .grouphdr { font-size: 9pt; }
 table.hours .subhdr { font-size: 7.6pt; }
 table.hours .data td { height: 1.8em; }
 
-/* Crew tables */
-.crewwrap { display: flex; gap: 0.5cm; }
-.crewwrap > div { flex: 1; }
+/* Crew tables — two side by side, kept the same height even when one is empty:
+   the flex items stretch to equal height, and each table fills its item so its
+   rows expand to match the taller table. */
+.crewwrap { display: flex; gap: 0.5cm; align-items: stretch; }
+.crewwrap > div { flex: 1; display: flex; }
+.crewwrap table.crew { width: 100%; height: 100%; }
 table.crew th { font-size: 7.8pt; }
 table.crew td { height: 1.45em; }
 table.crew .lp { width: 0.5cm; text-align: center; }
