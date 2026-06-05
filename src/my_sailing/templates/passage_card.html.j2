@@ -54,9 +54,15 @@
 
 {%- macro crewtable(lang, L) -%}
 <table class="grid crew">
+  <colgroup>
+    <col class="col-lp"><col class="col-name"><col class="col-cert"><col class="col-rank">
+    <col class="col-gap">
+    <col class="col-lp"><col class="col-name"><col class="col-cert"><col class="col-rank">
+  </colgroup>
   <tr>
     <th class="lp">{{ L.lp }}</th><th>{{ L.crewname }}</th>
-    <th class="c-cert">{{ L.crewcert }}</th><th class="c-rank c-div">{{ L.crewrank }}</th>
+    <th class="c-cert">{{ L.crewcert }}</th><th class="c-rank">{{ L.crewrank }}</th>
+    <th class="c-gap"></th>
     <th class="lp">{{ L.lp }}</th><th>{{ L.crewname }}</th>
     <th class="c-cert">{{ L.crewcert }}</th><th class="c-rank">{{ L.crewrank }}</th>
   </tr>
@@ -69,7 +75,8 @@
     <td class="lp center">{% if f1 %}{{ i + 1 }}{% else %}&nbsp;{% endif %}</td>
     <td>{{ (m1.name or "") if m1 else "" }}&nbsp;</td>
     <td class="center">{{ bi(m1.cert, lang) if m1 else "" }}&nbsp;</td>
-    <td class="center c-div">{{ bi(m1.rank, lang) if m1 else "" }}&nbsp;</td>
+    <td class="center">{{ bi(m1.rank, lang) if m1 else "" }}&nbsp;</td>
+    <td class="c-gap"></td>
     <td class="lp center">{% if f2 %}{{ i + 7 }}{% else %}&nbsp;{% endif %}</td>
     <td>{{ (m2.name or "") if m2 else "" }}&nbsp;</td>
     <td class="center">{{ bi(m2.cert, lang) if m2 else "" }}&nbsp;</td>

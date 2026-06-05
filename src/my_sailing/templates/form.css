@@ -74,16 +74,24 @@ table.hours .grouphdr { font-size: 9pt; }
 table.hours .subhdr { font-size: 7.6pt; }
 table.hours .data td { height: 1.8em; }
 
-/* Crew table — single table with 8 columns (two halves of 4).
-   Using one table means both halves always share the same row heights even when
-   content on one side is taller than the other. */
-table.crew { width: 100%; }
+/* Crew table — single 9-column table (4 data + gap + 4 data).
+   table-layout:fixed + <col> widths make both name columns identical width
+   regardless of content. The gap column has no border, visually splitting the
+   table into two halves that look like separate tables. */
+table.crew { width: 100%; table-layout: fixed; }
+table.crew col.col-lp   { width: 3%; }
+table.crew col.col-name { width: 29%; }
+table.crew col.col-cert { width: 9%; }
+table.crew col.col-rank { width: 8%; }
+table.crew col.col-gap  { width: 0.4cm; }
 table.crew th { font-size: 7.8pt; }
 table.crew td { height: 1.45em; }
-table.crew .lp { width: 0.5cm; text-align: center; }
-table.crew .c-cert { width: 1.6cm; }
-table.crew .c-rank { width: 1.5cm; }
-table.crew .c-div { border-right: 1.5pt solid #000; }
+table.crew .lp { text-align: center; }
+table.crew .c-cert { }
+table.crew .c-gap, table.crew th.c-gap {
+  border-top: none; border-bottom: none; border-left: none; border-right: none;
+  padding: 0; background: #fff;
+}
 
 /* ---------------- Checkboxes (opinion) ---------------- */
 table.opinion td { border: 0.5pt solid #000; padding: 3px 5px; }
