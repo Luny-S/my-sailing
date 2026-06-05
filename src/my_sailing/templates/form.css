@@ -96,8 +96,8 @@ table.crew .c-gap + td, table.crew .c-gap + th { border-left: 0.5pt solid #000; 
 
 /* ---------------- Checkboxes (opinion) ---------------- */
 table.opinion { width: 100%; border-collapse: collapse; margin-top: 2px; margin-bottom: 5px; }
-table.opinion td { border: none; padding: 2px 5px; vertical-align: middle; }
-table.opinion .subhead td { font-weight: bold; border-top: 0.4pt solid #aaa; padding-top: 3px; }
+table.opinion td { border: none; padding: 3px 8px; vertical-align: middle; }
+table.opinion .subhead td { font-weight: bold; padding-top: 8px; padding-bottom: 1px; }
 table.opinion .op-hdr { font-weight: bold; }
 .cb {
   display: inline-block; width: 9pt; height: 9pt; border: 0.5pt solid #000;
