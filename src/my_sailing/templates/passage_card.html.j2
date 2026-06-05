@@ -52,20 +52,30 @@
 {%- for _ in range([n - lines|length, 0]|max) %}<div class="noteline">&nbsp;</div>{% endfor -%}
 {%- endmacro -%}
 
-{%- macro crewtable(lang, L, start) -%}
+{%- macro crewtable(lang, L) -%}
 <table class="grid crew">
-  <tr><th class="lp">{{ L.lp }}</th><th>{{ L.crewname }}</th>
-      <th class="c-cert">{{ L.crewcert }}</th><th class="c-rank">{{ L.crewrank }}</th></tr>
-  {% for i in range(start, start + 6) %}
-  {% set m = d.crew[i] if i < d.crew|length else none %}
-  {% set filled = m and (m.name or m.cert or m.rank) %}
   <tr>
-    <td class="lp">{{ loop.index0 + start + 1 if filled else "" }}</td>
-    <td>{{ (m.name or "") if m else "" }}</td>
-    <td class="center">{{ bi(m.cert, lang) if m else "" }}</td>
-    <td class="center">{{ bi(m.rank, lang) if m else "" }}</td>
+    <th class="lp">{{ L.lp }}</th><th>{{ L.crewname }}</th>
+    <th class="c-cert">{{ L.crewcert }}</th><th class="c-rank c-div">{{ L.crewrank }}</th>
+    <th class="lp">{{ L.lp }}</th><th>{{ L.crewname }}</th>
+    <th class="c-cert">{{ L.crewcert }}</th><th class="c-rank">{{ L.crewrank }}</th>
   </tr>
-  {% endfor %}
+  {%- for i in range(6) %}
+  {%- set m1 = d.crew[i] if i < d.crew|length else none %}
+  {%- set m2 = d.crew[i+6] if i+6 < d.crew|length else none %}
+  {%- set f1 = m1 and (m1.name or m1.cert or m1.rank) %}
+  {%- set f2 = m2 and (m2.name or m2.cert or m2.rank) %}
+  <tr>
+    <td class="lp center">{% if f1 %}{{ i + 1 }}{% else %}&nbsp;{% endif %}</td>
+    <td>{{ (m1.name or "") if m1 else "" }}&nbsp;</td>
+    <td class="center">{{ bi(m1.cert, lang) if m1 else "" }}&nbsp;</td>
+    <td class="center c-div">{{ bi(m1.rank, lang) if m1 else "" }}&nbsp;</td>
+    <td class="lp center">{% if f2 %}{{ i + 7 }}{% else %}&nbsp;{% endif %}</td>
+    <td>{{ (m2.name or "") if m2 else "" }}&nbsp;</td>
+    <td class="center">{{ bi(m2.cert, lang) if m2 else "" }}&nbsp;</td>
+    <td class="center">{{ bi(m2.rank, lang) if m2 else "" }}&nbsp;</td>
+  </tr>
+  {%- endfor %}
 </table>
 {%- endmacro -%}
 
@@ -143,10 +153,7 @@
   </table>
 
   <div class="sec">{{ L.crewsec }}</div>
-  <div class="crewwrap">
-    <div>{{ crewtable(lang, L, 0) }}</div>
-    <div>{{ crewtable(lang, L, 6) }}</div>
-  </div>
+  {{ crewtable(lang, L) }}
 
   <div class="spacer"></div>
 
