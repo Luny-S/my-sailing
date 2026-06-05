@@ -1,0 +1,68 @@
+{
+  "date": "2026-07-01",
+  "yacht": {
+    "name": "s/y Orion",
+    "reg": "GD-1234",
+    "loa": "10.5",
+    "homeport": "Gdynia",
+    "engine": "18",
+    "mmsi": "261012345",
+    "call_sign": "SP1234",
+    "vhf_channel": "16"
+  },
+  "captain": {
+    "name": "Jan Kowalski",
+    "cert": {"pl": "Jachtowy Sternik Morski", "en": "Yachtmaster Offshore"},
+    "phone": "+48 600 100 200",
+    "email": "jan.kowalski@example.com",
+    "place_date": "Gdynia, 2026-07-15"
+  },
+  "cruise": {
+    "logbook_no": "1/2026",
+    "port_embark": "Gdynia",
+    "date_embark": "2026-07-01",
+    "port_disembark": "Gdynia",
+    "date_disembark": "2026-07-14",
+    "visited_ports": "Hel, Łeba, Kołobrzeg, Świnoujście",
+    "tidal_ports_count": "0",
+    "cruise_days": "14",
+    "hours_total": "96",
+    "hours_sails": "72",
+    "hours_engine": "24",
+    "hours_tidal": "0",
+    "hours_mooring": "144",
+    "trip_nm": "420",
+    "remarks_captain": {"pl": "Rejs przebiegł bez zakłóceń.", "en": "Passage completed without incident."},
+    "owner_place_date": "Gdynia, 2026-07-15"
+  },
+  "crew": [
+    {
+      "name": "Anna Nowak",
+      "cert": "Patent żeglarza",
+      "rank": {"pl": "bosman", "en": "boatswain"},
+      "phone": "+48 601 200 300",
+      "email": "anna.nowak@example.com",
+      "opinion": "positive",
+      "duties": "very_good",
+      "seasickness": "none",
+      "endurance": "good",
+      "remarks": {"pl": "Doskonały członek załogi.", "en": "Excellent crew member."}
+    },
+    {
+      "name": "Piotr Wiśniewski",
+      "cert": "Motorowodniak",
+      "rank": {"pl": "mechanik", "en": "engineer"},
+      "phone": "+48 602 300 400",
+      "email": "piotr.w@example.com",
+      "opinion": "positive",
+      "duties": "good",
+      "seasickness": "could_work",
+      "endurance": "satisfactory"
+    },
+    {
+      "name": "Maria Wróbel",
+      "rank": {"pl": "kucharz", "en": "cook"},
+      "phone": "+48 603 400 500"
+    }
+  ]
+}

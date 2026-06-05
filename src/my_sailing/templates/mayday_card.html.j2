@@ -1,0 +1,118 @@
+{#- Karta MAYDAY / MIPDANIO — pre-filled call card for VHF distress procedure
+    Fields: d.yacht_name, d.mmsi, d.call_sign, d.channel
+    Print and laminate — keep near the VHF radio. -#}
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+
+<div class="sheet">
+
+  {# No logo — private document #}
+
+  {# Pre-filled vessel block #}
+  <div class="row" style="margin-bottom:4px">
+    <div class="fld"><span class="lbl">Jacht / Vessel:</span><span class="val" style="font-weight:bold">{{ d.yacht_name or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">MMSI:</span><span class="val" style="width:3cm; font-weight:bold">{{ d.mmsi or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">Call sign:</span><span class="val" style="width:2.5cm; font-weight:bold">{{ d.call_sign or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">VHF:</span><span class="val" style="width:1.2cm; font-weight:bold">Ch {{ d.channel }}</span></div>
+  </div>
+
+  {# ===== MAYDAY — DISTRESS ===== #}
+  <div class="mayday-banner">&#128680; MAYDAY — NIEBEZPIECZEŃSTWO / DISTRESS &#128680;</div>
+
+  <div style="font-size:8pt; color:#cc0000; text-align:center; margin-bottom:3px">
+    Nadawaj na <b>VHF Ch {{ d.channel }}</b> — naciśnij przycisk DSC DISTRESS (5 sekund), następnie mów:
+  </div>
+
+  <div class="mayday-block">
+    {# Each step can be edited freely #}
+    <div class="step">
+      <span class="letter">M</span>
+      <b>MAYDAY MAYDAY MAYDAY</b>
+    </div>
+    <div class="step">
+      <span class="letter">I</span>
+      Tu jacht / This is vessel &nbsp;
+      <span class="mval">{{ d.yacht_name or "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" }}</span>
+      &nbsp;×3
+    </div>
+    <div class="step">
+      <span class="letter">P</span>
+      Pozycja / Position: &nbsp;
+      <span class="mval">&nbsp;</span>
+    </div>
+    <div class="step">
+      <span class="letter">D</span>
+      Jestem w niebezpieczeństwie / Nature of distress: &nbsp;
+      <span class="mval">&nbsp;</span>
+    </div>
+    <div class="step">
+      <span class="letter">A</span>
+      Na pokładzie / Persons on board: &nbsp;
+      <span class="mval" style="min-width:2cm">&nbsp;</span>
+      &nbsp; osób / persons
+    </div>
+    <div class="step">
+      <span class="letter">N</span>
+      Potrzebuję pomocy / Assistance needed: &nbsp;
+      <span class="mval">&nbsp;</span>
+    </div>
+    <div class="step">
+      <span class="letter">I</span>
+      Inne informacje / Other info: &nbsp;
+      <span class="mval">&nbsp;</span>
+    </div>
+    <div class="step">
+      <span class="letter">O</span>
+      <b>Odbiór / OVER</b>
+    </div>
+  </div>
+
+  <div style="font-size:8pt; background:#fff3cd; border:0.5pt solid #cc8800; padding:3px 6px; margin-bottom:5px">
+    <b>Jeśli brak odpowiedzi na Ch 16:</b> powtórz wywołanie po 2 min. Spróbuj VHF Ch 67 (BSH), Ch 70 (DSC).
+    Aktywuj EPIRB. <b>Nie opuszczaj jachtu dopóki to możliwe.</b>
+  </div>
+
+  {# ===== PAN PAN — URGENCY ===== #}
+  <div class="pan-block">
+    <div class="pan-hdr">PAN PAN — PILNOŚĆ / URGENCY (nie bezpośrednie zagrożenie życia)</div>
+    <div style="font-size:8.5pt">
+      „PAN PAN PAN PAN PAN PAN, tu jacht
+      <b>{{ d.yacht_name or "___________" }}</b>,
+      pozycja [poz.], [opis sytuacji], na pokładzie [N] osób, odbiór."
+    </div>
+  </div>
+
+  {# ===== SECURITE ===== #}
+  <div class="pan-block" style="border-color:#444">
+    <div class="pan-hdr" style="color:#000">SÉCURITÉ — BEZPIECZEŃSTWO NAWIGACJI / NAVIGATIONAL HAZARD</div>
+    <div style="font-size:8.5pt">
+      „SÉCURITÉ SÉCURITÉ SÉCURITÉ, tu jacht
+      <b>{{ d.yacht_name or "___________" }}</b>,
+      [informacja], odbiór Ch 16."
+    </div>
+  </div>
+
+  {# ===== Key contacts — fill in manually ===== #}
+  <div class="sec" style="margin-top:4px">Ważne kontakty / Key Contacts</div>
+  <table class="grid" style="margin:0">
+    <tr>
+      <th style="width:40%">Służba / Service</th>
+      <th>VHF</th>
+      <th>Telefon / Phone</th>
+    </tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+  </table>
+
+  <div class="spacer"></div>
+
+  <div class="foot">
+    <div class="rule"></div>
+    Wydrukuj i przechowuj przy radiostacji VHF. / Print and keep near the VHF radio.
+  </div>
+
+</div>
+
+</body></html>

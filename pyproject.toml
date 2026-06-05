@@ -14,6 +14,7 @@ dependencies = [
 build-docs = "my_sailing.build:main"
 fill-doc = "my_sailing.fill:main"
 render-doc = "my_sailing.render:main"
+render-voyage = "my_sailing.voyage_render:main"
 
 [build-system]
 requires = ["hatchling"]

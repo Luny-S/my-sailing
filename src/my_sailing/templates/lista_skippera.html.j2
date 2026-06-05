@@ -1,0 +1,102 @@
+{#- Lista skippera — co zabrać na rejs / Skipper's packing list — 1 page A4
+    No dynamic data — this is a static checklist.
+    Add or remove <li> items freely in each section. -#}
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+
+<div class="sheet">
+
+  <div style="border: 1pt solid #000; text-align: center; font-weight: bold;
+              font-size: 14pt; padding: 5px; margin-bottom: 5px; letter-spacing: 0.08em;">
+    LISTA SKIPPERA — CO ZABRAĆ NA REJS
+  </div>
+
+  <div class="hr"></div>
+
+  <div style="display:flex; gap:0.8cm">
+
+    {# --- LEFT COLUMN --- #}
+    <div style="flex:1">
+
+      {# ===== Dokumenty — add/remove items ===== #}
+      <div class="cl-hdr">Dokumenty</div>
+      <ul class="cl">
+        <li><span class="cb"></span> patent żeglarski</li>
+        <li><span class="cb"></span> uprawnienia radiooperatora (UKF)</li>
+        <li><span class="cb"></span> Boarding Pass — uprawnienie do przejęcia jachtu</li>
+        <li><span class="cb"></span> dowód osobisty / paszport</li>
+        <li><span class="cb"></span> prawo jazdy (przy wyjeździe samochodem)</li>
+        <li><span class="cb"></span> ubezpieczenie turystyczne KL + NNW załogi</li>
+        <li><span class="cb"></span> karta kredytowa do kaucji (VISA/MC — wypukła!)</li>
+        <li><span class="cb"></span> bilety lotnicze / autokarowe</li>
+        <li><span class="cb"></span> green card (wyjazd poza UE)</li>
+      </ul>
+
+      {# ===== Materiały nawigacyjne — add/remove items ===== #}
+      <div class="cl-hdr">Materiały nawigacyjne</div>
+      <ul class="cl">
+        <li><span class="cb"></span> locja akwenu</li>
+        <li><span class="cb"></span> mapy / przewodniki portowe</li>
+        <li><span class="cb"></span> długopisy, ołówek, gumka (do pracy z mapą)</li>
+        <li><span class="cb"></span> ręczny GPS (jeśli posiadamy)</li>
+        <li><span class="cb"></span> lornetka</li>
+        <li><span class="cb"></span> zegarek (waterproof)</li>
+      </ul>
+
+      {# ===== Inne drobne — add/remove items ===== #}
+      <div class="cl-hdr">Inne drobne elementy</div>
+      <ul class="cl">
+        <li><span class="cb"></span> rozgałęziacz prądu</li>
+        <li><span class="cb"></span> taśma samoprzylepna (elektryczna + izolacyjna)</li>
+        <li><span class="cb"></span> koszulki na kartki A4</li>
+        <li><span class="cb"></span> dodatkowy portfel na kasę wspólną</li>
+        <li><span class="cb"></span> banderki (polska, klubowa, portowe)</li>
+      </ul>
+
+    </div>
+
+    {# --- RIGHT COLUMN --- #}
+    <div style="flex:1">
+
+      {# ===== Wydruki — add/remove items ===== #}
+      <div class="cl-hdr">Wydruki i formularze</div>
+      <ul class="cl">
+        <li><span class="cb"></span> checklista przejęcia jachtu</li>
+        <li><span class="cb"></span> odprawa bezpieczeństwa (safety briefing)</li>
+        <li><span class="cb"></span> lista załogi z danymi kontaktowymi</li>
+        <li><span class="cb"></span> rozpiska wacht</li>
+        <li><span class="cb"></span> rozpiska alarmów na jachcie</li>
+        <li><span class="cb"></span> druki opinii z rejsu</li>
+        <li><span class="cb"></span> karta rejsu (staż kapitański)</li>
+        <li><span class="cb"></span> menu na rejsie / lista zakupów</li>
+      </ul>
+
+      {# ===== Telefony (fill in before departure) ===== #}
+      <div class="cl-hdr">Telefony do wpisania przed rejsem</div>
+      <table class="grid" style="margin:0">
+        <tr><th style="width:40%">Osoba</th><th>Telefon</th></tr>
+        {# Add rows as needed #}
+        <tr><td style="height:1.3em">Armator / marina</td><td></td></tr>
+        <tr><td style="height:1.3em">MRCC / SAR</td><td></td></tr>
+        <tr><td style="height:1.3em">&nbsp;</td><td></td></tr>
+        <tr><td style="height:1.3em">&nbsp;</td><td></td></tr>
+        <tr><td style="height:1.3em">&nbsp;</td><td></td></tr>
+        <tr><td style="height:1.3em">&nbsp;</td><td></td></tr>
+        <tr><td style="height:1.3em">&nbsp;</td><td></td></tr>
+        <tr><td style="height:1.3em">&nbsp;</td><td></td></tr>
+      </table>
+
+    </div>
+
+  </div>{# end two-column #}
+
+  <div class="spacer"></div>
+
+  <div class="row">
+    <div class="fld"><span class="lbl">Rejs / Voyage:</span><span class="val"></span></div>
+    <div class="fld fixed"><span class="lbl">Data:</span><span class="val" style="width:3cm"></span></div>
+    <div class="fld fixed"><span class="lbl">Skipper:</span><span class="val" style="width:5cm"></span></div>
+  </div>
+
+</div>{# end .sheet #}
+
+</body></html>

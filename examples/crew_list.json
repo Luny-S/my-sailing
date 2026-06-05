@@ -1,0 +1,9 @@
+{
+  "yacht": "s/y Orion",
+  "date": "2026-06-01",
+  "crew": [
+    {"name": "Jan Kowalski", "phone": "+48 600 100 200"},
+    {"name": "Anna Nowak",   "phone": "+48 601 200 300"},
+    {"name": "Piotr Wiśniewski", "phone": "+48 602 300 400"}
+  ]
+}

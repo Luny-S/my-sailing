@@ -1,0 +1,61 @@
+{#- Lista załogi — A5 format (half A4), name + phone
+    Fields: d.yacht, d.date, d.crew (list of {name, phone})
+    Blank rows are added automatically to fill the table. -#}
+<!DOCTYPE html><html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    /* Override A4 page size from form.css for this A5 document */
+    @page { size: A5 portrait; margin: 1cm 1.2cm; }
+    .sheet { height: 19.0cm; }
+  </style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <div style="border: 1pt solid #000; text-align: center; font-weight: bold;
+              font-size: 14pt; padding: 5px; margin-bottom: 5px; letter-spacing: 0.08em;">
+    LISTA ZAŁOGI / CREW LIST
+  </div>
+
+  <div class="row">
+    <div class="fld"><span class="lbl">Jacht / Yacht:</span><span class="val">{{ d.yacht or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">Data:</span><span class="val" style="width:2.8cm">{{ d.date or "" }}</span></div>
+  </div>
+  <div class="hr"></div>
+
+  <table class="grid" style="margin-top:3px">
+    <tr>
+      <th style="width:0.7cm; text-align:center">Lp.</th>
+      <th>Imię i nazwisko / Name &amp; Surname</th>
+      <th style="width:3.5cm">Telefon / Phone</th>
+    </tr>
+    {# Filled rows from data #}
+    {% for m in d.crew %}
+    <tr>
+      <td style="text-align:center; height:1.4em">{{ loop.index }}</td>
+      <td>{{ m.name or "" }}</td>
+      <td>{{ m.phone or "" }}</td>
+    </tr>
+    {% endfor %}
+    {# Blank rows to fill the rest of the table (up to 16 total rows) #}
+    {% for i in range([16 - d.crew|length, 0]|max) %}
+    <tr>
+      <td style="text-align:center; height:1.4em">{{ d.crew|length + loop.index }}</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div class="spacer"></div>
+
+  <div class="row" style="margin-top:4px">
+    <div class="fld"><span class="lbl">Kapitan:</span><span class="val"></span></div>
+    <div class="fld"><span class="lbl">Podpis:</span><span class="val"></span></div>
+  </div>
+
+</div>
+
+</body></html>

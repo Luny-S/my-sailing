@@ -12,6 +12,9 @@ from pathlib import Path
 from .base import Bilingual, FormDocument
 from .crew_opinion import CrewOpinion, CrewOpinionMember
 from .passage_card import CrewMember, PassageCard
+from .simple_forms import BlankForm, CrewList, CrewListMember, MaydayCard
+from .voyage import (VoyageCaptain, VoyageCruise, VoyageCrewMember,
+                     VoyageRecord, VoyageYacht)
 
 ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = ROOT / "build"
@@ -23,6 +26,15 @@ __all__ = [
     "PassageCard",
     "CrewOpinion",
     "CrewOpinionMember",
+    "BlankForm",
+    "CrewList",
+    "CrewListMember",
+    "MaydayCard",
+    "VoyageRecord",
+    "VoyageYacht",
+    "VoyageCaptain",
+    "VoyageCruise",
+    "VoyageCrewMember",
     "DocumentSpec",
     "DOCUMENTS",
     "get_document",
@@ -58,6 +70,41 @@ DOCUMENTS: dict[str, DocumentSpec] = {
         model=CrewOpinion,
         html_template="crew_opinion.html.j2",
         template=BUILD_DIR / "documents" / "crew-opinion" / "crew_opinion.pdf",
+    ),
+    "safety-briefing": DocumentSpec(
+        name="safety-briefing",
+        title="Odprawa bezpieczeństwa / Safety briefing",
+        model=BlankForm,
+        html_template="safety_briefing.html.j2",
+        template=BUILD_DIR / "documents" / "safety-briefing" / "safety_briefing.pdf",
+    ),
+    "checklista": DocumentSpec(
+        name="checklista",
+        title="Checklista — przejęcie jachtu / Yacht check-in checklist",
+        model=BlankForm,
+        html_template="checklista.html.j2",
+        template=BUILD_DIR / "documents" / "checklista" / "checklista.pdf",
+    ),
+    "lista-skippera": DocumentSpec(
+        name="lista-skippera",
+        title="Lista skippera — co zabrać na rejs / Skipper's packing list",
+        model=BlankForm,
+        html_template="lista_skippera.html.j2",
+        template=BUILD_DIR / "documents" / "lista-skippera" / "lista_skippera.pdf",
+    ),
+    "crew-list": DocumentSpec(
+        name="crew-list",
+        title="Lista załogi / Crew contact list (A5)",
+        model=CrewList,
+        html_template="crew_list.html.j2",
+        template=BUILD_DIR / "documents" / "crew-list" / "crew_list.pdf",
+    ),
+    "mayday-card": DocumentSpec(
+        name="mayday-card",
+        title="Karta MAYDAY / MIPDANIO distress call card",
+        model=MaydayCard,
+        html_template="mayday_card.html.j2",
+        template=BUILD_DIR / "documents" / "mayday-card" / "mayday_card.pdf",
     ),
 }
 

@@ -1,0 +1,139 @@
+{#- Safety Briefing / Odprawa bezpieczeństwa — print-ready A4 form
+    Fields: d.yacht, d.date
+    Content lives here — edit sections freely. -#}
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+
+<div class="sheet">
+
+  <div style="border: 1pt solid #000; text-align: center; font-weight: bold;
+              font-size: 14pt; padding: 5px; margin-bottom: 5px; letter-spacing: 0.08em;">
+    ODPRAWA BEZPIECZEŃSTWA / SAFETY BRIEFING
+  </div>
+
+  <div class="row">
+    <div class="fld"><span class="lbl">Jacht / Yacht:</span><span class="val">{{ d.yacht or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">Data / Date:</span><span class="val" style="width:3.5cm">{{ d.date or "" }}</span></div>
+  </div>
+
+  <div class="hr"></div>
+
+  {# ===== 1. VESSEL & EQUIPMENT — edit locations/equipment below ===== #}
+  <div class="sec">1. Jacht i wyposażenie / Vessel &amp; Equipment</div>
+  <div class="row">
+    <div class="fld"><span class="lbl">Gaśnice (lokalizacja):</span><span class="val"></span></div>
+    <div class="fld"><span class="lbl">Koło ratunkowe + lin. świetl.:</span><span class="val"></span></div>
+  </div>
+  <div class="row">
+    <div class="fld"><span class="lbl">Tratwa ratunkowa:</span><span class="val"></span><span class="unit">&nbsp;—&nbsp;aktyw.:</span><span class="val" style="width:2cm"></span></div>
+    <div class="fld"><span class="lbl">Kamizelki (szafa):</span><span class="val"></span></div>
+  </div>
+  <div class="row">
+    <div class="fld"><span class="lbl">Uprzęże / liny asekuracyjne:</span><span class="val"></span></div>
+    <div class="fld"><span class="lbl">EPIRB:</span><span class="val"></span><span class="unit">&nbsp;auto/ręczna</span></div>
+  </div>
+  <div class="row">
+    <div class="fld"><span class="lbl">Flary / rakiety:</span><span class="val"></span></div>
+    <div class="fld"><span class="lbl">Apteczka:</span><span class="val"></span></div>
+  </div>
+
+  {# ===== 2. EMERGENCY PROCEDURES — edit steps below ===== #}
+  <div class="sec">2. Procedury alarmowe / Emergency Procedures</div>
+
+  <div style="display:flex; gap:0.6cm">
+
+    <div style="flex:1">
+      <div class="cl-hdr">Człowiek za burtą (MOB)</div>
+      <ol class="proc">
+        <li>Krzyknąć <b>„CZŁOWIEK ZA BURTĄ!"</b> — wcisnąć MOB na GPS.</li>
+        <li>Rzucić koło ratunkowe / boję MOB natychmiast.</li>
+        <li>Wyznaczyć obserwatora — nie spuszczać wzroku z osoby.</li>
+        <li>Zawołać pozostałych, kapitan przejmuje stery.</li>
+        <li>Podejście: Quick Stop lub Reach &amp; Return.</li>
+        <li>VHF Ch 16: MAYDAY jeśli sytuacja krytyczna.</li>
+      </ol>
+
+      <div class="cl-hdr" style="margin-top:3px">Pożar / Fire</div>
+      <ol class="proc">
+        <li>Krzyknąć <b>„POŻAR!"</b> — odciąć gaz i paliwo.</li>
+        <li>Gaśnica — nie otwierać luku przed ugaszeniem.</li>
+        <li>Jeśli nieopanowany: MAYDAY, gotowość do opuszczenia.</li>
+        <li>Punkt zbiórki: <span style="border-bottom:0.6pt solid #000; display:inline-block; min-width:3cm">&nbsp;</span></li>
+      </ol>
+
+      <div class="cl-hdr" style="margin-top:3px">Przeciek / Flooding</div>
+      <ol class="proc">
+        <li>Zlokalizować źródło, zamknąć zawory denne.</li>
+        <li>Pompa zęzowa: elektr. <span style="border-bottom:0.6pt solid #000; display:inline-block; min-width:1.5cm">&nbsp;</span> / ręczna <span style="border-bottom:0.6pt solid #000; display:inline-block; min-width:1.5cm">&nbsp;</span></li>
+        <li>Tamowanie szmatami i klinami.</li>
+        <li>Zagrożenie zatonięciem: MAYDAY, przygotować tratwę.</li>
+      </ol>
+    </div>
+
+    <div style="flex:1">
+      {# ===== 3. RADIO — edit contacts below ===== #}
+      <div class="sec" style="margin-top:0">3. Komunikacja / Radio Communication</div>
+      <ul class="proc">
+        <li>VHF: <span style="border-bottom:0.6pt solid #000; display:inline-block; min-width:2cm">&nbsp;</span> — kanał wywołania/niebezp.: <b>Ch 16</b></li>
+        <li>MRCC Gdynia: VHF Ch 16 / tel. +48 58 620 62 00</li>
+        <li>Prognoza pogody IMGW: VHF Ch <span style="border-bottom:0.6pt solid #000; display:inline-block; min-width:1cm">&nbsp;</span></li>
+        <li>Kanał roboczy załogi: Ch <span style="border-bottom:0.6pt solid #000; display:inline-block; min-width:1cm">&nbsp;</span></li>
+      </ul>
+      <div style="font-size:8pt; margin-top:2px; padding:2px 4px; border:0.5pt solid #888">
+        <b>MAYDAY:</b> „MAYDAY MAYDAY MAYDAY, tu jacht [nazwa], pozycja [poz.],
+        [opis], na pokładzie [N] osób, wzywam pomocy, odbiór."
+      </div>
+
+      {# ===== 4. AREA HAZARDS — add/remove items for your sailing area ===== #}
+      <div class="sec" style="margin-top:4px">4. Specyfika akwenu / Area Hazards</div>
+      <ul class="proc">
+        <li>Szybko zmieniająca się pogoda — obserwuj barometr i IMGW.</li>
+        <li>Wody płytkie — stały monitoring głębokościomierza.</li>
+        <li>Ruch statków handlowych — COLREGS, obserwacja AIS.</li>
+        <li>Sieci rybackie — wachta nocna, zwalniać w rejonach połowów.</li>
+        <li>Wyłącznik główny silnika: <span style="border-bottom:0.6pt solid #000; display:inline-block; min-width:2.5cm">&nbsp;</span></li>
+        <li>Zawory denne: <span style="border-bottom:0.6pt solid #000; display:inline-block; min-width:3cm">&nbsp;</span></li>
+      </ul>
+
+      {# ===== 5. GENERAL RULES — add/remove items below ===== #}
+      <div class="sec" style="margin-top:4px">5. Zasady ogólne / General Rules</div>
+      <ul class="proc">
+        <li>Nie wychodzić na pokład bez powiadomienia wachtowego.</li>
+        <li>Nocą: obowiązkowa uprząż z liną asekuracyjną.</li>
+        <li>Zakaz alkoholu podczas wachty.</li>
+        <li>Każdy melduje wszelkie nieprawidłowości kapitanowi.</li>
+      </ul>
+    </div>
+
+  </div>{# end two-column flex #}
+
+  <div class="hr" style="margin-top:4px"></div>
+
+  {# ===== SIGNATURE TABLE — add/remove rows as needed ===== #}
+  <div style="font-weight:bold; margin: 2px 0 1px">
+    Potwierdzenie uczestnictwa w odprawie / Briefing acknowledgement:
+  </div>
+  <table class="grid" style="margin:0">
+    <tr>
+      <th style="width:45%">Imię i nazwisko / Name</th>
+      <th style="width:22%">Data / Date</th>
+      <th>Podpis / Signature</th>
+    </tr>
+    {# Add or remove <tr> rows to match crew size #}
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+    <tr><td style="height:1.3em">&nbsp;</td><td></td><td></td></tr>
+  </table>
+
+  <div class="row" style="margin-top:4px">
+    <div class="fld"><span class="lbl">Kapitan / Master:</span><span class="val"></span></div>
+    <div class="fld"><span class="lbl">Podpis / Signature:</span><span class="val"></span></div>
+  </div>
+
+</div>{# end .sheet #}
+
+</body></html>

@@ -1,0 +1,198 @@
+{#- Checklista — przejęcie jachtu / Yacht check-in checklist — 2 pages A4
+    Fields: d.yacht, d.date
+    Add or remove <li> items freely in each section. -#}
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+
+{# ========================= PAGE 1 ========================= #}
+<div class="sheet">
+
+  <div style="border: 1pt solid #000; text-align: center; font-weight: bold;
+              font-size: 14pt; padding: 5px; margin-bottom: 5px; letter-spacing: 0.08em;">
+    CHECKLISTA — PRZEJĘCIE JACHTU
+  </div>
+
+  <div class="row">
+    <div class="fld"><span class="lbl">Jacht / Yacht:</span><span class="val">{{ d.yacht or "" }}</span></div>
+    <div class="fld fixed"><span class="lbl">Data:</span><span class="val" style="width:3cm">{{ d.date or "" }}</span></div>
+  </div>
+  <div class="hr"></div>
+
+  {# Two-column layout for page 1 #}
+  <div style="display:flex; gap:0.7cm; flex:1">
+
+    {# --- LEFT COLUMN --- #}
+    <div style="flex:1">
+
+      {# ===== W biurze armatora — add/remove items ===== #}
+      <div class="cl-hdr">W biurze armatora</div>
+      <ul class="cl">
+        <li><span class="cb"></span> zezwolenie na pływanie dla załogi</li>
+        <li><span class="cb"></span> dokumenty jachtu (certyfikat, rejestracja)</li>
+        <li><span class="cb"></span> lista kontrolna wyposażenia od armatora</li>
+        <li><span class="cb"></span> klucze do jachtu</li>
+        <li><span class="cb"></span> uzgodnienie opcji dodatkowych (spinaker, ponton)</li>
+        <li><span class="cb"></span> potwierdzenie kaucji (zaświadczenie/blokada karty)</li>
+        <li><span class="cb"></span> numer kontaktowy do armatora / koordynatora</li>
+      </ul>
+
+      {# ===== Urządzenia — add/remove items ===== #}
+      <div class="cl-hdr">Urządzenia — włączyć i sprawdzić</div>
+      <ul class="cl">
+        <li><span class="cb"></span> wyłącznik główny (lokalizacja: <span style="border-bottom:0.5pt solid #888; display:inline-block; min-width:2.5cm">&nbsp;</span>)</li>
+        <li><span class="cb"></span> radio VHF — Ch 16, sprawdzić DSC/MMSI</li>
+        <li><span class="cb"></span> GPS / ploter</li>
+        <li><span class="cb"></span> zestaw: wiatromierz + log + sonda</li>
+        <li><span class="cb"></span> autopilot</li>
+        <li><span class="cb"></span> ekrany przy kole sterowym</li>
+        <li><span class="cb"></span> stan akumulatorów (wskaźnik napięcia)</li>
+        <li><span class="cb"></span> oświetlenie: kabiny, mesa, WC</li>
+        <li><span class="cb"></span> światła jachtowe (rufowe, dziobowe, masztowe)</li>
+        <li><span class="cb"></span> pompa zęzowa — elektr. i ręczna</li>
+        <li><span class="cb"></span> winda kotwiczna</li>
+        <li><span class="cb"></span> dodatkowe bezpieczniki i żarówki (lokalizacja)</li>
+      </ul>
+
+    </div>
+
+    {# --- RIGHT COLUMN --- #}
+    <div style="flex:1">
+
+      {# ===== Nawigacja — add/remove items ===== #}
+      <div class="cl-hdr">Nawigacja</div>
+      <ul class="cl">
+        <li><span class="cb"></span> komplet map (generalki + podejściówki)</li>
+        <li><span class="cb"></span> aktualna locja akwenu</li>
+        <li><span class="cb"></span> spis świateł i radiosygnałów</li>
+        <li><span class="cb"></span> przyrządy nav. (trójkąty, ołówki, cyrkle, kątomierz)</li>
+        <li><span class="cb"></span> instrukcje: GPS, VHF, autopilot, echosonda</li>
+        <li><span class="cb"></span> instrukcja obsługi silnika</li>
+        <li><span class="cb"></span> schemat instalacji wodnej i gazowej</li>
+      </ul>
+
+      {# ===== Mesa — add/remove items ===== #}
+      <div class="cl-hdr">Mesa / Salon</div>
+      <ul class="cl">
+        <li><span class="cb"></span> szelki bezpieczeństwa — min. 3 szt.</li>
+        <li><span class="cb"></span> skrzynka bosmańska (szekle, ściągacze, klucze, taśma)</li>
+        <li><span class="cb"></span> apteczka — sprawdzić daty ważności</li>
+        <li><span class="cb"></span> race</li>
+        <li><span class="cb"></span> stan zęzy (sprawdzić w 2–3 miejscach pod podłogą)</li>
+        <li><span class="cb"></span> poziom oleju w silniku</li>
+        <li><span class="cb"></span> radio / odtwarzacz</li>
+        <li><span class="cb"></span> rozgałęziacz (jeśli brak — kupić przed wypłynięciem)</li>
+      </ul>
+
+    </div>
+
+  </div>{# end two-column #}
+
+  <div class="row" style="margin-top:4px">
+    <div class="fld"><span class="lbl">Uwagi (strona 1):</span><span class="val"></span></div>
+  </div>
+
+</div>{# end page 1 #}
+
+{# ========================= PAGE 2 ========================= #}
+<div class="sheet">
+
+  <div style="border: 1pt solid #000; text-align: center; font-weight: bold;
+              font-size: 14pt; padding: 5px; margin-bottom: 5px; letter-spacing: 0.08em;">
+    CHECKLISTA — PRZEJĘCIE JACHTU (2/2)
+  </div>
+
+  <div style="display:flex; gap:0.7cm; flex:1">
+
+    {# --- LEFT COLUMN --- #}
+    <div style="flex:1">
+
+      {# ===== Kambuz — add/remove items ===== #}
+      <div class="cl-hdr">Kambuz</div>
+      <ul class="cl">
+        <li><span class="cb"></span> naczynia: talerze, szklanki, sztućce</li>
+        <li><span class="cb"></span> patelnia, czajnik, garnki</li>
+        <li><span class="cb"></span> butla gazowa — podnieść i ocenić pełność</li>
+        <li><span class="cb"></span> odkręcić gaz, sprawdzić działanie kuchenki</li>
+        <li><span class="cb"></span> ciepła woda w kranie (włączyć pompę wody)</li>
+        <li><span class="cb"></span> lodówka / lodówka elektryczna</li>
+      </ul>
+
+      {# ===== Kingston / WC — add/remove items ===== #}
+      <div class="cl-hdr">Kingston / WC</div>
+      <ul class="cl">
+        <li><span class="cb"></span> wypompowywanie wody z muszli (kingston otwarty)</li>
+        <li><span class="cb"></span> przycisk WC FLUSH — odprowadzanie wody z podłogi</li>
+        <li><span class="cb"></span> ciepła woda w kranie</li>
+      </ul>
+
+      {# ===== Kokpit i bakista — add/remove items ===== #}
+      <div class="cl-hdr">Kokpit i bakista rufowa</div>
+      <ul class="cl">
+        <li><span class="cb"></span> koła ratunkowe (w tym jedno z pławką świetlną)</li>
+        <li><span class="cb"></span> zapasowa butla gazowa</li>
+        <li><span class="cb"></span> olej do silnika (zapas)</li>
+        <li><span class="cb"></span> rumpel zapasowy</li>
+        <li><span class="cb"></span> owiewka wiatrowa</li>
+        <li><span class="cb"></span> bulba (duży odbijacz)</li>
+        <li><span class="cb"></span> wiadro</li>
+        <li><span class="cb"></span> prysznic rufowy — działanie</li>
+        <li><span class="cb"></span> cumy (ilość i stan)</li>
+        <li><span class="cb"></span> 2 wiosła do pontonu</li>
+        <li><span class="cb"></span> dodatkowa kotwica</li>
+      </ul>
+
+    </div>
+
+    {# --- RIGHT COLUMN --- #}
+    <div style="flex:1">
+
+      {# ===== Pokład — add/remove items ===== #}
+      <div class="cl-hdr">Pokład</div>
+      <ul class="cl">
+        <li><span class="cb"></span> winda kotwiczna — działanie</li>
+        <li><span class="cb"></span> tratwa ratunkowa — mocowanie i data przeglądu</li>
+        <li><span class="cb"></span> odbijarki: ilość <span style="border-bottom:0.5pt solid #888; display:inline-block; min-width:0.8cm">&nbsp;</span> — stan, napompowanie</li>
+        <li><span class="cb"></span> ponton — napompowanie, dulki na wiosła</li>
+        <li><span class="cb"></span> stan fałów i obszycia żagli</li>
+        <li><span class="cb"></span> stan burt (zadrapania, uszkodzenia)</li>
+        <li><span class="cb"></span> stabilność słupków na sztormrelingi</li>
+        <li><span class="cb"></span> siatka dla dzieci (jeśli dotyczy)</li>
+        <li><span class="cb"></span> zawleczki, szekle, karabińczyki, kabestany, knaги</li>
+        <li><span class="cb"></span> krawaty (krótkie odcinki liny)</li>
+      </ul>
+
+      {# ===== Żagle — add/remove items ===== #}
+      <div class="cl-hdr">Żagle</div>
+      <ul class="cl">
+        <li><span class="cb"></span> rozwinąć grotsail i fok — sprawdzić stan materiału</li>
+        <li><span class="cb"></span> żagiel sztormowy — lokalizacja i stan</li>
+        <li><span class="cb"></span> sprzęt do rollowania / refowania</li>
+      </ul>
+
+      {# ===== Silniki — add/remove items ===== #}
+      <div class="cl-hdr">Silniki (z przedstawicielem armatora)</div>
+      <ul class="cl">
+        <li><span class="cb"></span> stan paliwa</li>
+        <li><span class="cb"></span> uruchomienie / wyłączanie silnika głównego</li>
+        <li><span class="cb"></span> biegi (przód / wstecz / luz)</li>
+        <li><span class="cb"></span> silnik zaburtowy (o ile jest)</li>
+        <li><span class="cb"></span> ster strumieniowy (o ile jest)</li>
+      </ul>
+
+    </div>
+
+  </div>{# end two-column #}
+
+  <div class="spacer"></div>
+
+  <div class="row">
+    <div class="fld"><span class="lbl">Uwagi (strona 2):</span><span class="val"></span></div>
+  </div>
+  <div class="row" style="margin-top:4px">
+    <div class="fld"><span class="lbl">Skipper:</span><span class="val"></span></div>
+    <div class="fld"><span class="lbl">Podpis:</span><span class="val"></span></div>
+    <div class="fld"><span class="lbl">Przedstawiciel armatora:</span><span class="val"></span></div>
+  </div>
+
+</div>{# end page 2 #}
+
+</body></html>
