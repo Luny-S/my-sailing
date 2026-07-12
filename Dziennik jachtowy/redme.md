@@ -1,0 +1,1 @@
+Często wypałnianie dziennika jachtowego wymaga informacji dostępnych jedynie naprzyrządach w kokpicie jachtu. Żeby uniknać konieczności wielokrotnego dopytywania się i zmniejszyć ryzyko pomyłki zaczęliśmy stosować taką kartę, którą można zalaminować i wypełniać zmazywalnym markerem. 
